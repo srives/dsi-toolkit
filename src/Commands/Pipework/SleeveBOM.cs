@@ -33,16 +33,22 @@ namespace DSI.Commands.Pipework
                     {
                         var fi = elem as FamilyInstance;
 
-                        if (fi.Symbol.FamilyName == "DSI Round Floor Sleeve" 
+                        
+                        if (fi.Symbol.FamilyName == "DSI Round Floor Sleeve"  // Round
                             || fi.Symbol.FamilyName == "DSI Round Wall Sleeve"
                             || fi.Symbol.FamilyName == "eM_SV_Rnd_Flr_Sleeve"
+                            || fi.Symbol.FamilyName == "eM_SV_Rnd_Flr_Sleeve V2" // NEW
+                            || fi.Symbol.FamilyName == "eM_SV_Rnd_Wall_Sleeve V2" // NEW
                             || fi.Symbol.FamilyName == "Round Floor Sleeve"
-                            || fi.Symbol.FamilyName == "Round Wall Sleeve")
+                            || fi.Symbol.FamilyName == "Round Wall Sleeve"
+                            )
                         {
                             data.Add(ProcessRoundSleeve(elem));
                         }
                         else if (fi.Symbol.FamilyName == "Rectangular Floor Sleeve" 
-                                 || fi.Symbol.FamilyName == "Rectangular Wall Sleeve")
+                                 || fi.Symbol.FamilyName == "Rectangular Wall Sleeve"
+                                 || fi.Symbol.FamilyName == "eM_SV_Rec_Wall_Sleeve V2" // NEW
+                                 || fi.Symbol.FamilyName == "eM_SV_Rec_Flr_Sleeve V2") // NEW
                         {
                             data.Add(ProcessRectangularSleeve(elem));
                         }
@@ -74,6 +80,11 @@ namespace DSI.Commands.Pipework
                 || fi.Symbol.FamilyName == "Round Floor Sleeve"
                 || fi.Symbol.FamilyName == "Round Wall Sleeve"
                 || fi.Symbol.FamilyName == "Rectangular Floor Sleeve"
+                || fi.Symbol.FamilyName == "Rectangular Floor Sleeve"
+                || fi.Symbol.FamilyName == "eM_SV_Rnd_Flr_Sleeve V2" // NEW
+                || fi.Symbol.FamilyName == "eM_SV_Rnd_Wall_Sleeve V2" // NEW
+                || fi.Symbol.FamilyName == "eM_SV_Rec_Wall_Sleeve V2" // NEW
+                || fi.Symbol.FamilyName == "eM_SV_Rec_Flr_Sleeve V2" // NEW
                 || fi.Symbol.FamilyName == "Rectangular Wall Sleeve")
             {
                 sleeve = new Sleeve
