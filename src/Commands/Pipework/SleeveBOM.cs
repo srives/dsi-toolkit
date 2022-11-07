@@ -33,16 +33,21 @@ namespace DSI.Commands.Pipework
                     {
                         var fi = elem as FamilyInstance;
 
-                        if (fi.Symbol.FamilyName == "DSI Round Floor Sleeve" 
+                        if (fi.Symbol.FamilyName == "DSI Round Floor Sleeve"  // Round
                             || fi.Symbol.FamilyName == "DSI Round Wall Sleeve"
                             || fi.Symbol.FamilyName == "eM_SV_Rnd_Flr_Sleeve"
+                            || fi.Symbol.FamilyName == "eM_SV_Rnd_Flr_Sleeve V2" // NEW
+                            || fi.Symbol.FamilyName == "eM_SV_Rnd_Wall_Sleeve V2" // NEW
                             || fi.Symbol.FamilyName == "Round Floor Sleeve"
-                            || fi.Symbol.FamilyName == "Round Wall Sleeve")
+                            || fi.Symbol.FamilyName == "Round Wall Sleeve"
+                            )
                         {
                             data.Add(ProcessRoundSleeve(elem));
                         }
-                        else if (fi.Symbol.FamilyName == "Rectangular Floor Sleeve" 
-                                 || fi.Symbol.FamilyName == "Rectangular Wall Sleeve")
+                        else if (fi.Symbol.FamilyName == "Rectangular Floor Sleeve"
+                                 || fi.Symbol.FamilyName == "Rectangular Wall Sleeve"
+                                 || fi.Symbol.FamilyName == "eM_SV_Rec_Wall_Sleeve V2" // NEW
+                                 || fi.Symbol.FamilyName == "eM_SV_Rec_Flr_Sleeve V2") // NEW
                         {
                             data.Add(ProcessRectangularSleeve(elem));
                         }
@@ -51,11 +56,11 @@ namespace DSI.Commands.Pipework
                     data = CountAndReturnUniques(data, "Quantity", Array.Empty<string>());
 
                     var ew = new ExcelWriter(
-                        templatePath: @"\\budacad\cad\Office_Templates\Excel\CSV_BOM_Revit_Sleeves.xlsm", 
-                        defaultFileName: @"CSV_BOM_Revit_Sleves", 
+                        templatePath: @"\\budacad\cad\Office_Templates\Excel\CSV_BOM_Revit_Sleeves.xlsm",
+                        defaultFileName: @"CSV_BOM_Revit_Sleves",
                         commandLog: log);
                     ExportData(
-                        ew, data,   
+                        ew, data,
                         worksheetWriteRow: 3,
                         worksheetIndex: 1);
                     ew.Close();
@@ -74,6 +79,11 @@ namespace DSI.Commands.Pipework
                 || fi.Symbol.FamilyName == "Round Floor Sleeve"
                 || fi.Symbol.FamilyName == "Round Wall Sleeve"
                 || fi.Symbol.FamilyName == "Rectangular Floor Sleeve"
+                || fi.Symbol.FamilyName == "Rectangular Floor Sleeve"
+                || fi.Symbol.FamilyName == "eM_SV_Rnd_Flr_Sleeve V2" // NEW
+                || fi.Symbol.FamilyName == "eM_SV_Rnd_Wall_Sleeve V2" // NEW
+                || fi.Symbol.FamilyName == "eM_SV_Rec_Wall_Sleeve V2" // NEW
+                || fi.Symbol.FamilyName == "eM_SV_Rec_Flr_Sleeve V2" // NEW
                 || fi.Symbol.FamilyName == "Rectangular Wall Sleeve")
             {
                 sleeve = new Sleeve
@@ -155,9 +165,9 @@ namespace DSI.Commands.Pipework
         }
 
         private static void ExportData(
-            ExcelWriter ew, 
-            List<Sleeve> data, 
-            int worksheetWriteRow, 
+            ExcelWriter ew,
+            List<Sleeve> data,
+            int worksheetWriteRow,
             int worksheetIndex)
         {
             string[,] firstRegion = new string[data.Count, 2];
