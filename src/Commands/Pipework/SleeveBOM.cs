@@ -13,6 +13,8 @@ namespace DSI.Commands.Pipework
     [Transaction(TransactionMode.Manual)]
     class SleeveBOM : Command
     {
+        string ExcelRoot { get; set; } = @"c:\budacad\cad\Office_Templates\Excel\";
+        
         private const int precision = 2;
 
         private protected override Result Main(ExternalCommandData commandData)
@@ -56,7 +58,7 @@ namespace DSI.Commands.Pipework
                     data = CountAndReturnUniques(data, "Quantity", Array.Empty<string>());
 
                     var ew = new ExcelWriter(
-                        templatePath: @"\\budacad\cad\Office_Templates\Excel\CSV_BOM_Revit_Sleeves.xlsm",
+                        templatePath: $"{ExcelRoot}CSV_BOM_Revit_Sleeves.xlsm",
                         defaultFileName: @"CSV_BOM_Revit_Sleves",
                         commandLog: log);
                     ExportData(

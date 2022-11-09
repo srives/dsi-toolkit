@@ -13,6 +13,8 @@ namespace DSI.Commands.Hanger
     [Transaction(TransactionMode.Manual)]
     public class HangerBOM : Command
     {
+        string ExcelRoot { get; set; } = @"c:\budacad\cad\Office_Templates\Excel\";
+
         /// <summary>
         /// Conversion factor for feet to inches.
         /// </summary>
@@ -81,7 +83,7 @@ namespace DSI.Commands.Hanger
                     }
 
                     var ew = new ExcelWriter(
-                        templatePath: @"\\budacad\cad\Office_Templates\Excel\CSV_BOM_Revit_Hanger.xlsm",
+                        templatePath: $"{ExcelRoot}CSV_BOM_Revit_Hanger.xlsm",
                         defaultFileName: @"CSV_BOM_Revit_Hanger",
                         commandLog: log);
 

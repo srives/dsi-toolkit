@@ -12,6 +12,7 @@ namespace DSI.Commands.Pipework
     [Transaction(TransactionMode.Manual)]
     public class PipeAndFittingBOM : Command
     {
+        string ExcelRoot { get; set; } = @"c:\budacad\cad\Office_Templates\Excel\";
         /// <summary>
         /// The number of decimal places to round to.
         /// </summary>
@@ -59,7 +60,7 @@ namespace DSI.Commands.Pipework
                     var fittingData = ProcessFittings(fittings);
 
                     var ew = new ExcelWriter(
-                        templatePath: @"\\budacad\cad\Office_Templates\Excel\CSV_BOM_REVIT_By_Service.xlsm",
+                        templatePath: $"{ExcelRoot}CSV_BOM_REVIT_By_Service.xlsm",
                         defaultFileName: @"CSV_BOM_REVIT_By_Service",
                         commandLog: log);
                     ExportData(
