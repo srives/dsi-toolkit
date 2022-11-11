@@ -14,7 +14,7 @@ namespace DSI.Commands.Pipework
     class SleeveBOM : Command
     {
         string ExcelRoot { get; set; } = @"c:\budacad\cad\Office_Templates\Excel\";
-        
+
         private const int precision = 2;
 
         private protected override Result Main(ExternalCommandData commandData)
@@ -46,7 +46,7 @@ namespace DSI.Commands.Pipework
                         {
                             data.Add(ProcessRoundSleeve(elem));
                         }
-                        else if (fi.Symbol.FamilyName == "Rectangular Floor Sleeve"
+                        else if (fi.Symbol.FamilyName == "Rectangular Floor Sleeve" 
                                  || fi.Symbol.FamilyName == "Rectangular Wall Sleeve"
                                  || fi.Symbol.FamilyName == "eM_SV_Rec_Wall_Sleeve V2" // NEW
                                  || fi.Symbol.FamilyName == "eM_SV_Rec_Flr_Sleeve V2") // NEW
@@ -57,15 +57,32 @@ namespace DSI.Commands.Pipework
 
                     data = CountAndReturnUniques(data, "Quantity", Array.Empty<string>());
 
-                    var ew = new ExcelWriter(
-                        templatePath: $"{ExcelRoot}CSV_BOM_Revit_Sleeves.xlsm",
-                        defaultFileName: @"CSV_BOM_Revit_Sleves",
-                        commandLog: log);
-                    ExportData(
-                        ew, data,
-                        worksheetWriteRow: 3,
-                        worksheetIndex: 1);
-                    ew.Close();
+                    bool csv = true;
+
+                    if (!csv)
+                    {
+                        var ew = new ExcelWriter(
+                            templatePath: $"{ExcelRoot}CSV_BOM_Revit_Sleeves.xlsm",
+                            defaultFileName: @"CSV_BOM_Revit_Sleves",
+                            commandLog: log);
+                        ExportData(
+                            ew, data,
+                            worksheetWriteRow: 3,
+                            worksheetIndex: 1);
+                        ew.Close(csv);
+                    }
+                    else
+                    {
+                        var ew = new ExcelWriter(
+                            columnHeaders: new string[,] { { "Size", "Description", "QTY", "Length" } },
+                            //templatePath: @"\\budacad\cad\Office_Templates\Excel\CSV_BOM_Revit_Sleeves.xlsm", 
+                            defaultFileName: @"CSV_BOM_Revit_Sleves",
+                            commandLog: log);
+                        ExportDataCSV(
+                            ew, data,
+                            worksheetWriteRow: 3);
+                        ew.Close(csv);
+                    }
                 }
             }
 
@@ -80,7 +97,6 @@ namespace DSI.Commands.Pipework
             if (fi.Symbol.FamilyName == "eM_SV_Rnd_Flr_Sleeve"
                 || fi.Symbol.FamilyName == "Round Floor Sleeve"
                 || fi.Symbol.FamilyName == "Round Wall Sleeve"
-                || fi.Symbol.FamilyName == "Rectangular Floor Sleeve"
                 || fi.Symbol.FamilyName == "Rectangular Floor Sleeve"
                 || fi.Symbol.FamilyName == "eM_SV_Rnd_Flr_Sleeve V2" // NEW
                 || fi.Symbol.FamilyName == "eM_SV_Rnd_Wall_Sleeve V2" // NEW
@@ -166,7 +182,7 @@ namespace DSI.Commands.Pipework
             return sleeve;
         }
 
-        private static void ExportData(
+       private static void ExportData(
             ExcelWriter ew,
             List<Sleeve> data,
             int worksheetWriteRow,
@@ -194,6 +210,33 @@ namespace DSI.Commands.Pipework
             ew.WriteRange(firstRegion, data.Count, 2, worksheetWriteRow, 1, worksheetIndex);
             ew.WriteRange(secondRegion, data.Count, 1, worksheetWriteRow, 3, worksheetIndex);
             ew.WriteRange(thirdRegion, data.Count, 1, worksheetWriteRow, 4, worksheetIndex);
+        }
+
+        private static void ExportDataCSV(
+            ExcelWriter ew, 
+            List<Sleeve> data, 
+            int worksheetWriteRow)
+        {
+            string[,] firstRegion = new string[data.Count, 5];
+            for (int r = 0; r < data.Count; r++)
+            {
+                firstRegion[r, 0] = data[r].Size;
+                firstRegion[r, 1] = data[r].Description;
+            }
+
+            int[,] secondRegion = new int[data.Count, 1];
+            for (int r = 0; r < data.Count; r++)
+            {
+                firstRegion[r, 2] = data[r].Quantity.ToString();
+            }
+
+            double[,] thirdRegion = new double[data.Count, 1];
+            for (int r = 0; r < data.Count; r++)
+            {
+                firstRegion[r, 3] = data[r].Length.ToString();
+            }
+
+            ew.WriteRangeCSV(firstRegion);
         }
 
         private class Sleeve

@@ -82,17 +82,34 @@ namespace DSI.Commands.Hanger
                         t.Commit();
                     }
 
-                    var ew = new ExcelWriter(
-                        templatePath: $"{ExcelRoot}CSV_BOM_Revit_Hanger.xlsm",
-                        defaultFileName: @"CSV_BOM_Revit_Hanger",
-                        commandLog: log);
+                    bool csv = true;
+                    if (!csv)
+                    {
+                        var ew = new ExcelWriter(
+                             templatePath: $"{ExcelRoot}CSV_BOM_Revit_Hanger.xlsm",
+                             defaultFileName: @"CSV_BOM_Revit_Hanger",
+                             commandLog: log);
 
-                    ExportData(
-                        ew, hangers,
-                        worksheetWriteRow: 5,
-                        worksheetIndex: 1);
+                        ExportData(
+                            ew, hangers,
+                            worksheetWriteRow: 5,
+                            worksheetIndex: 1);
+                        ew.Close(csv);
+                    }
+                    else
+                    {
+                        // CSV version
+                        var ew = new ExcelWriter(
+                            columnHeaders: new string[,] { { "ASSY TYPE", "QTY", "HANGER SIZE", "ROD SIZE", "CUT LENGTH ROD A", "CUT LENGTH ROD B", "TAG NUMBER", "SERVICE ABBR.", "BOP", "System", "BOP" } },
+                            //templatePath: @"\\budacad\C\Office_Templates\Excel\CSV_BOM_Revit_Hanger.xlsm",
+                            defaultFileName: @"CSV_BOM_Revit_Hanger.csv",
+                            commandLog: log);
 
-                    ew.Close();
+                        ExportData(
+                            ew, hangers);
+
+                        ew.Close(csv);
+                    }
                 }
             }
 
@@ -267,6 +284,57 @@ namespace DSI.Commands.Hanger
             ew.WriteRange(thirdRegion, hangers.Count, 1, worksheetWriteRow, 3, worksheetIndex);
             ew.WriteRange(fourthRegion, hangers.Count, 3, worksheetWriteRow, 4, worksheetIndex);
             ew.WriteRange(fifthRegion, hangers.Count, 3, worksheetWriteRow, 7, worksheetIndex);
+        }
+
+        /// <summary>
+        /// Exports the data to the ExcelWriter to be written to an Excel file.
+        /// </summary>
+        /// <param name="ew">The ExcelWriter instance to write the data to.</param>
+        /// <param name="data">The data to write to the ExcelWriter.</param>
+
+        /// <param name="worksheetWriteRow">The first row that the worksheet is intended to have data on. (1-based index).</param>
+        /// <param name="worksheetIndex">The worksheet index that is intended to have data on. (1-based index).</param>
+        private static void ExportData(ExcelWriter ew, List<HangerData> hangers)
+        {
+            string[,] firstRegion = new string[hangers.Count, 9];
+            for (int r = 0; r < hangers.Count; r++)
+            {
+                firstRegion[r, 0] = hangers[r].Family;
+            }
+
+            int[,] secondRegion = new int[hangers.Count, 1];
+            for (int r = 0; r < hangers.Count; r++)
+            {
+                firstRegion[r, 1] = HangerData.Quantity.ToString();
+            }
+
+            string[,] thirdRegion = new string[hangers.Count, 1];
+            for (int r = 0; r < hangers.Count; r++)
+            {
+                firstRegion[r, 2] = hangers[r].FabricationNotes;
+            }
+
+            double[,] fourthRegion = new double[hangers.Count, 3];
+            for (int r = 0; r < hangers.Count; r++)
+            {
+                firstRegion[r, 3] = hangers[r].SupportRod.ToString();
+                firstRegion[r, 4] = hangers[r].LengthA.ToString();
+                firstRegion[r, 5] = hangers[r].LengthB.ToString();
+            }
+
+            string[,] fifthRegion = new string[hangers.Count, 3];
+            for (int r = 0; r < hangers.Count; r++)
+            {
+                firstRegion[r, 6] = hangers[r].ItemNumber;
+                firstRegion[r, 7] = hangers[r].ServiceAbbreviation;
+                firstRegion[r, 8] = hangers[r].Offset;
+            }
+
+            ew.WriteRangeCSV(firstRegion); //, hangers.Count, 1, worksheetWriteRow, 1, worksheetIndex);
+            // ew.WriteRange(secondRegion); //, hangers.Count, 1, worksheetWriteRow, 2, worksheetIndex);
+            // ew.WriteRange(thirdRegion); //, hangers.Count, 1, worksheetWriteRow, 3, worksheetIndex);
+            // ew.WriteRange(fourthRegion); //, hangers.Count, 3, worksheetWriteRow, 4, worksheetIndex);
+            // ew.WriteRange(fifthRegion); //, hangers.Count, 3, worksheetWriteRow, 7, worksheetIndex);
         }
 
 

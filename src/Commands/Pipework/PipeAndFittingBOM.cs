@@ -59,22 +59,40 @@ namespace DSI.Commands.Pipework
 
                     var fittingData = ProcessFittings(fittings);
 
-                    var ew = new ExcelWriter(
-                        templatePath: $"{ExcelRoot}CSV_BOM_REVIT_By_Service.xlsm",
-                        defaultFileName: @"CSV_BOM_REVIT_By_Service",
-                        commandLog: log);
-                    ExportData(
-                        ew, pipeworkData,
-                        previousWriteSize: 0,
-                        worksheetWriteRow: 2,
-                        worksheetIndex: 3);
-                    ExportData(
-                        ew, fittingData,
-                        previousWriteSize: pipeworkData.Count,
-                        worksheetWriteRow: 2,
-                        worksheetIndex: 3);
+                    bool csv = true;
+                    if (!csv)
+                    {
+                        var ew = new ExcelWriter(
+                            templatePath: $"{ExcelRoot}CSV_BOM_REVIT_By_Service.xlsm",
+                            defaultFileName: @"CSV_BOM_REVIT_By_Service",
+                            commandLog: log);
+                        ExportData(
+                            ew, pipeworkData,
+                            previousWriteSize: 0,
+                            worksheetWriteRow: 2,
+                            worksheetIndex: 3);
+                        ExportData(
+                            ew, fittingData,
+                            previousWriteSize: pipeworkData.Count,
+                            worksheetWriteRow: 2,
+                            worksheetIndex: 3);
 
-                    ew.Close();
+                        ew.Close(csv);
+                    }
+                    else
+                    {
+
+                        var ew = new ExcelWriter(
+                            columnHeaders: new string[,] { { "System", "SIZE", "Description", "Class", "Material", "Type", "QTY", "LENGTH (ft)" } },
+                            defaultFileName: @"CSV_BOM_REVIT_By_Service.csv",
+                            commandLog: log);
+                        ExportDataCSV(
+                            ew, pipeworkData);
+                        ExportDataCSV(
+                            ew, fittingData);
+
+                        ew.Close(csv);
+                    }
                 }
             }
 
@@ -128,7 +146,7 @@ namespace DSI.Commands.Pipework
             var data    = new PipeOrFitting()
             {
                 ServiceName         = fp?.ServiceName ?? "",
-                ProductEntry        = pipe?.get_Parameter(BuiltInParameter.FABRICATION_PRODUCT_ENTRY).AsString() ?? "",
+                ProductEntry        = "'" + pipe?.get_Parameter(BuiltInParameter.FABRICATION_PRODUCT_ENTRY).AsString() ?? "'",
                 Family              = pipe?.get_Parameter(BuiltInParameter.ELEM_FAMILY_PARAM).AsValueString() ?? "",
                 Specification       = pipe?.get_Parameter(BuiltInParameter.FABRICATION_SPECIFICATION).AsValueString() ?? "",
                 PartMaterial        = pipe?.get_Parameter(BuiltInParameter.FABRICATION_PART_MATERIAL).AsValueString() ?? "",
@@ -161,10 +179,10 @@ namespace DSI.Commands.Pipework
         /// <param name="worksheetWriteRow">The first row that the worksheet is intended to have data on. (1-based index).</param>
         /// <param name="worksheetIndex">The worksheet index that is intended to have data on. (1-based index).</param>
         private static void ExportData(
-            ExcelWriter ew, 
-            List<PipeOrFitting> data, 
-            int previousWriteSize, 
-            int worksheetWriteRow, 
+            ExcelWriter ew,
+            List<PipeOrFitting> data,
+            int previousWriteSize,
+            int worksheetWriteRow,
             int worksheetIndex)
         {
             string[,] firstRegion = new string[data.Count, 5];
@@ -192,6 +210,47 @@ namespace DSI.Commands.Pipework
             ew.WriteRange(firstRegion, data.Count, 5, worksheetWriteRow + previousWriteSize, 1, worksheetIndex);
             ew.WriteRange(secondRegion, data.Count, 1, worksheetWriteRow + previousWriteSize, 6, worksheetIndex);
             ew.WriteRange(thirdRegion, data.Count, 1, worksheetWriteRow + previousWriteSize, 7, worksheetIndex);
+        }
+
+        /// <summary>
+        /// Exports the data to the ExcelWriter to be written to an Excel file.
+        /// </summary>
+        /// <param name="ew">The ExcelWriter instance to write the data to.</param>
+        /// <param name="data">The data to write to the ExcelWriter.</param>
+        /// <param name="previousWriteSize">
+        /// If a two part write is needed, then previousWriteSize will allow the next write to start off where the last left off.
+        /// </param>
+        /// <param name="worksheetWriteRow">The first row that the worksheet is intended to have data on. (1-based index).</param>
+        /// <param name="worksheetIndex">The worksheet index that is intended to have data on. (1-based index).</param>
+        private static void ExportDataCSV(
+            ExcelWriter ew, 
+            List<PipeOrFitting> data)
+        {
+            string[,] firstRegion = new string[data.Count, 8];
+            for (int r = 0; r < data.Count; r++)
+            {
+                firstRegion[r, 0] = data[r].ServiceName;
+                firstRegion[r, 1] = "'" + data[r].ProductEntry;
+                firstRegion[r, 2] = data[r].Family;
+                firstRegion[r, 3] = data[r].Specification;
+                firstRegion[r, 4] = data[r].PartMaterial;
+            }
+
+            _ = new int[data.Count, 1];
+            for (int r = 0; r < data.Count; r++)
+            {
+                firstRegion[r, 6] = data[r].Quantity.ToString();
+            }
+
+            _ = new double[data.Count, 1];
+            for (int r = 0; r < data.Count; r++)
+            {
+                firstRegion[r, 7] = data[r].Length.ToString();
+            }
+
+            ew.WriteRangeCSV(firstRegion); //, data.Count, 5, worksheetWriteRow + previousWriteSize, 1, worksheetIndex);
+            // ew.WriteRange(secondRegion, data.Count, 1, worksheetWriteRow + previousWriteSize, 6, worksheetIndex);
+            // ew.WriteRange(thirdRegion, data.Count, 1, worksheetWriteRow + previousWriteSize, 7, worksheetIndex);
         }
 
 

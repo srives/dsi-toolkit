@@ -99,7 +99,7 @@ namespace DSI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Excel Spreadsheet (*.xlsm)|*.xlsm|All files (*.*)|*.*.
+        ///   Looks up a localized string similar to All files (*.*)|*.*.
         /// </summary>
         internal static string EXCEL_INFO_FILTER {
             get {

@@ -1,6 +1,7 @@
 ﻿using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
+using DSI.Commands.Pipework;
 using DSI.Core;
 using DSI.UI;
 using System;
@@ -127,41 +128,54 @@ namespace DSI
             #endregion
 
             #region **Pipework Buttons**
+            bool tiger = false;
+            if (tiger)
+            {
+                var tigerstop = AddPulldownButtonToPanel(
+                    pipeworkPanel,
+                    "TigerStop",
+                    "Send to TigerStop",
+                    "Asks the users to select copper pipework in the model and sends those elments to a desired TigerStop for cutting.",
+                    "During selection, parts without the Category property set to MEP Fabrication Pipework and ItemCustomId fabrication part property set to 2041 will be automatically filtered out.",
+                    Properties.Resources.next);
 
-            var tigerstop = AddPulldownButtonToPanel(
+                AddPushButtoToPulldownButton(
+                    tigerstop,
+                    "Buda TigerStop",
+                    "Buda TigerStop",
+                    Assembly.GetExecutingAssembly().Location,
+                    "DSI.Commands.Pipework.TigerstopBuda",
+                    "Send selected elements to the Buda TigerStop.",
+                    "The file name for the exported CSV will be the entered package name.");
+
+                AddPushButtoToPulldownButton(
+                    tigerstop,
+                    "Dallas TigerStop",
+                    "Dallas TigerStop",
+                    Assembly.GetExecutingAssembly().Location,
+                    "DSI.Commands.Pipework.TigerstopDallas",
+                    "Send selected elements to the Dallas TigerStop.",
+                    "The file name for the exported CSV will be the entered package name.");
+
+                AddPushButtoToPulldownButton(
+                    tigerstop,
+                    "Houston TigerStop",
+                    "Houston TigerStop",
+                    Assembly.GetExecutingAssembly().Location,
+                    "DSI.Commands.Pipework.TigerstopHouston",
+                    "Send selected elements to the Houston TigerStop.",
+                    "The file name for the exported CSV will be the entered package name.");
+            }
+
+            AddPushButtonToPanel(
                 pipeworkPanel,
-                "TigerStop",
-                "Send to TigerStop",
-                "Asks the users to select copper pipework in the model and sends those elments to a desired TigerStop for cutting.",
-                "During selection, parts without the Category property set to MEP Fabrication Pipework and ItemCustomId fabrication part property set to 2041 will be automatically filtered out.",
-                Properties.Resources.next);
-
-            AddPushButtoToPulldownButton(
-                tigerstop,
-                "Buda TigerStop",
-                "Buda TigerStop",
+                "Sleeve",
+                "Update Sleeve Params",  // Button Text
                 Assembly.GetExecutingAssembly().Location,
-                "DSI.Commands.Pipework.TigerstopBuda",
-                "Send selected elements to the Buda TigerStop.",
-                "The file name for the exported CSV will be the entered package name.");
-
-            AddPushButtoToPulldownButton(
-                tigerstop,
-                "Dallas TigerStop",
-                "Dallas TigerStop",
-                Assembly.GetExecutingAssembly().Location,
-                "DSI.Commands.Pipework.TigerstopDallas",
-                "Send selected elements to the Dallas TigerStop.",
-                "The file name for the exported CSV will be the entered package name.");
-
-            AddPushButtoToPulldownButton(
-                tigerstop,
-                "Houston TigerStop",
-                "Houston TigerStop",
-                Assembly.GetExecutingAssembly().Location,
-                "DSI.Commands.Pipework.TigerstopHouston",
-                "Send selected elements to the Houston TigerStop.",
-                "The file name for the exported CSV will be the entered package name.");
+                "DSI.Commands.Pipework.SleeveFixup",
+                "Update Sleeve Parameters for Exporting Points on Selected Parts", // Tool Tip
+                "Fixup Round Floors, Rectangular Floors, Round Walls and Rectangular Walls", // Long Desc
+                Properties.Resources.refresh);
 
             var exportBom = AddPulldownButtonToPanel(
                 pipeworkPanel,

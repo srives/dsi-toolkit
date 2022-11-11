@@ -84,7 +84,7 @@ namespace DSI.Commands.Pipework
         }
 
 
-        private Data ProcessElement(Element elem, string packageName)
+        private static Data ProcessElement(Element elem, string packageName)
         {
             Data pipe = new Data();
             FabricationPart fp = elem as FabricationPart;
