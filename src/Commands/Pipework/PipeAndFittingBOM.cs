@@ -12,11 +12,29 @@ namespace DSI.Commands.Pipework
     [Transaction(TransactionMode.Manual)]
     public class PipeAndFittingBOM : Command
     {
-        string ExcelRoot { get; set; } = @"c:\budacad\cad\Office_Templates\Excel\";
+        string ExcelRoot
+        {
+            get
+            {
+#if DEBUG
+                return @"C:\budacad\cad\Office_Templates\Excel\";
+#else
+                return @"\\budacad\cad\Office_Templates\Excel\";
+#endif
+            }
+        }
+
         /// <summary>
         /// The number of decimal places to round to.
         /// </summary>
         private const int precision = 2;
+        private bool csv = false;
+
+        public Result Csv(ExternalCommandData commandData)
+        {
+            csv = true;
+            return Main(commandData);
+        }
 
         /// <summary>
         /// Generates a BOM from a model's pipes and pipe fittings.
@@ -59,7 +77,6 @@ namespace DSI.Commands.Pipework
 
                     var fittingData = ProcessFittings(fittings);
 
-                    bool csv = true;
                     if (!csv)
                     {
                         var ew = new ExcelWriter(

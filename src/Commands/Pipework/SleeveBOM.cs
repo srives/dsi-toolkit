@@ -13,13 +13,28 @@ namespace DSI.Commands.Pipework
     [Transaction(TransactionMode.Manual)]
     class SleeveBOM : Command
     {
-        string ExcelRoot { get; set; } = @"c:\budacad\cad\Office_Templates\Excel\";
+        string ExcelRoot { 
+            get 
+            {
+#if DEBUG
+                return @"C:\budacad\cad\Office_Templates\Excel\";
+#else
+                return @"\\budacad\cad\Office_Templates\Excel\";
+#endif
+            } 
+        }
 
         private const int precision = 2;
+        private bool csv = false;
+
+        public Result Csv(ExternalCommandData commandData)
+        {
+            csv = true;
+            return Main(commandData);
+        }
 
         private protected override Result Main(ExternalCommandData commandData)
         {
-
             if (commandData == null)
             {
                 throw new ArgumentNullException(paramName: nameof(commandData));
@@ -56,8 +71,6 @@ namespace DSI.Commands.Pipework
                     }
 
                     data = CountAndReturnUniques(data, "Quantity", Array.Empty<string>());
-
-                    bool csv = true;
 
                     if (!csv)
                     {

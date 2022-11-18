@@ -13,7 +13,17 @@ namespace DSI.Commands.Hanger
     [Transaction(TransactionMode.Manual)]
     public class HangerBOM : Command
     {
-        string ExcelRoot { get; set; } = @"c:\budacad\cad\Office_Templates\Excel\";
+        string ExcelRoot
+        {
+            get
+            {
+#if DEBUG
+                return @"C:\budacad\cad\Office_Templates\Excel\";
+#else
+                return @"\\budacad\cad\Office_Templates\Excel\";
+#endif
+            }
+        }
 
         /// <summary>
         /// Conversion factor for feet to inches.
@@ -25,6 +35,12 @@ namespace DSI.Commands.Hanger
         /// </summary>
         private const int precision = 2;
 
+        private bool csv = false;
+        public Result Csv(ExternalCommandData commandData)
+        {
+            csv = true;
+            return Main(commandData);
+        }
 
         /// <summary>
         /// Generates a BOM from generic Clevis and Trapeze Hangers.
@@ -82,7 +98,6 @@ namespace DSI.Commands.Hanger
                         t.Commit();
                     }
 
-                    bool csv = true;
                     if (!csv)
                     {
                         var ew = new ExcelWriter(

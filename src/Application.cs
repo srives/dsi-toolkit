@@ -128,44 +128,6 @@ namespace DSI
             #endregion
 
             #region **Pipework Buttons**
-            bool tiger = false;
-            if (tiger)
-            {
-                var tigerstop = AddPulldownButtonToPanel(
-                    pipeworkPanel,
-                    "TigerStop",
-                    "Send to TigerStop",
-                    "Asks the users to select copper pipework in the model and sends those elments to a desired TigerStop for cutting.",
-                    "During selection, parts without the Category property set to MEP Fabrication Pipework and ItemCustomId fabrication part property set to 2041 will be automatically filtered out.",
-                    Properties.Resources.next);
-
-                AddPushButtoToPulldownButton(
-                    tigerstop,
-                    "Buda TigerStop",
-                    "Buda TigerStop",
-                    Assembly.GetExecutingAssembly().Location,
-                    "DSI.Commands.Pipework.TigerstopBuda",
-                    "Send selected elements to the Buda TigerStop.",
-                    "The file name for the exported CSV will be the entered package name.");
-
-                AddPushButtoToPulldownButton(
-                    tigerstop,
-                    "Dallas TigerStop",
-                    "Dallas TigerStop",
-                    Assembly.GetExecutingAssembly().Location,
-                    "DSI.Commands.Pipework.TigerstopDallas",
-                    "Send selected elements to the Dallas TigerStop.",
-                    "The file name for the exported CSV will be the entered package name.");
-
-                AddPushButtoToPulldownButton(
-                    tigerstop,
-                    "Houston TigerStop",
-                    "Houston TigerStop",
-                    Assembly.GetExecutingAssembly().Location,
-                    "DSI.Commands.Pipework.TigerstopHouston",
-                    "Send selected elements to the Houston TigerStop.",
-                    "The file name for the exported CSV will be the entered package name.");
-            }
 
             AddPushButtonToPanel(
                 pipeworkPanel,
@@ -188,18 +150,37 @@ namespace DSI
             AddPushButtoToPulldownButton(
                 exportBom,
                 "Export Pipework BOM to Excel",
-                "Pipe and Fitting BOM",
+                "Pipe and Fitting Excel BOM",
                 Assembly.GetExecutingAssembly().Location,
                 "DSI.Commands.Pipework.PipeAndFittingBOM",
                 "Asks the users to select pipework and fittings in the model and exports the required information to a BOM.",
                 "During selection, parts without the Category property set to MEP Fabrication Pipework AND parts with a Service Type of Weld (57), Joint (58), or Gasket (62) will be automatically filtered out.");
 
+           AddPushButtoToPulldownButton(
+                exportBom,
+                "Export Pipework BOM to CSV",
+                "Pipe and Fitting CSV BOM",
+                Assembly.GetExecutingAssembly().Location,
+                "DSI.Commands.Pipework.PipeAndFittingBOMCSV",
+                "Asks the users to select pipework and fittings in the model and exports the required information to a BOM.",
+                "During selection, parts without the Category property set to MEP Fabrication Pipework AND parts with a Service Type of Weld (57), Joint (58), or Gasket (62) will be automatically filtered out.");
+
+
             AddPushButtoToPulldownButton(
                 exportBom,
                 "Export Pipe Sleve BOM to Excel",
-                "Pipe Sleeve BOM",
+                "Pipe Sleeve Excel BOM",
                 Assembly.GetExecutingAssembly().Location,
                 "DSI.Commands.Pipework.SleeveBOM",
+                "Asks the user to select pipe sleeves in the model and exports the required intormation to a BOM.",
+                "During selection, parts without a Family Name name of either 'DSI Round Floor Sleeve' or 'Rectangular Floor Sleeve' will be automatically filtered out.");
+
+            AddPushButtoToPulldownButton(
+                exportBom,
+                "Export Pipe Sleve BOM to CSV",
+                "Pipe Sleeve CSV BOM",
+                Assembly.GetExecutingAssembly().Location,
+                "DSI.Commands.Pipework.SleeveBOMCSV",
                 "Asks the user to select pipe sleeves in the model and exports the required intormation to a BOM.",
                 "During selection, parts without a Family Name name of either 'DSI Round Floor Sleeve' or 'Rectangular Floor Sleeve' will be automatically filtered out.");
 
@@ -218,16 +199,31 @@ namespace DSI
                 "[placeholder]",
                 Properties.Resources.hashtag);
             */
-
-            AddPushButtonToPanel(
+            var hangerPullDown = AddPulldownButtonToPanel(
                 hangerPanel,
                 "Export Hanger BOM to Excel",
                 "Hanger BOM",
-                Assembly.GetExecutingAssembly().Location,
-                "DSI.Commands.Hanger.HangerBOM",
                 "Asks the users to select hangers in the model and exports the required information to a BOM. This will only export the data from Trapeze and Clevis hangers.",
                 "During selection, parts without the Category property set to MEP Fabrication Hangers will be automatically filtered out. A database transaction will be opened and the selected element's Product Entry will be updated.",
                 Properties.Resources.excelbw);
+
+            AddPushButtoToPulldownButton(
+                hangerPullDown,
+                "Export Hanger BOM to Excel",
+                "Hanger BOM Excel",
+                Assembly.GetExecutingAssembly().Location,
+                "DSI.Commands.Hanger.HangerBOM",
+                "Asks the users to select hangers in the model and exports the required information to a BOM. This will only export the data from Trapeze and Clevis hangers.",
+                "During selection, parts without the Category property set to MEP Fabrication Hangers will be automatically filtered out. A database transaction will be opened and the selected element's Product Entry will be updated.");
+
+            AddPushButtoToPulldownButton(
+                hangerPullDown,
+                "Export Hanger BOM to CSV",
+                "Hanger BOM CSV",
+                Assembly.GetExecutingAssembly().Location,
+                "DSI.Commands.Hanger.HangerBOMCSV",
+                "Asks the users to select hangers in the model and exports the required information to a BOM. This will only export the data from Trapeze and Clevis hangers.",
+                "During selection, parts without the Category property set to MEP Fabrication Hangers will be automatically filtered out. A database transaction will be opened and the selected element's Product Entry will be updated.");
 
             #endregion
 
