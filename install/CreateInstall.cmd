@@ -37,6 +37,10 @@ rem Source Path is the place under which there is the dsi-toolkit.sln file.
 	if not exist "%signFile%" set signFile=C:\repos\Stratus\Certificates\GTPServices,LLC.pfx
 
 rem -------------------------------------------------------------------
+echo CLEAN bin directory "%SOURCEPATH%\src\bin\"
+del "%SOURCEPATH%\src\bin\*.*" /s /q 1>nul 2>nul
+
+rem -------------------------------------------------------------------
 echo Building DSI Revit Toolkit
 echo Creating %WHAT% version of the installer (pass in -D to this script to create the DEBUG version)
 call .\build.cmd %WHAT%
@@ -70,37 +74,64 @@ echo Signing all relevant EXE files
 call sign.cmd
 
 echo Create staging area at c:\%ZipTop%\ where we will build our ZIP and EXE
-mkdir c:\%ZipTop%\%ZipTop%\ 2>nul
-mkdir c:\%ZipTop%\%ZipTop%\2018 2>nul
-mkdir c:\%ZipTop%\%ZipTop%\2019 2>nul
-mkdir c:\%ZipTop%\%ZipTop%\2020 2>nul
-mkdir c:\%ZipTop%\%ZipTop%\2021 2>nul
-mkdir c:\%ZipTop%\%ZipTop%\2022 2>nul
-mkdir c:\%ZipTop%\%ZipTop%\2023 2>nul
+mkdir "c:\%ZipTop%\%ZipTop%\" 2>nul
+mkdir "c:\%ZipTop%\%ZipTop%\2018" 2>nul
+mkdir "c:\%ZipTop%\%ZipTop%\2019" 2>nul
+mkdir "c:\%ZipTop%\%ZipTop%\2020" 2>nul
+mkdir "c:\%ZipTop%\%ZipTop%\2021" 2>nul
+mkdir "c:\%ZipTop%\%ZipTop%\2022" 2>nul
+mkdir "c:\%ZipTop%\%ZipTop%\2023" 2>nul
+
+echo Erase previous version of the staged files
+del "c:\%ZipTop%\%ZipTop%\*.*" /s /q 1>nul 2>nul
+del "c:\%ZipTop%\%ZipTop%\2018" /s /q 1>nul 2>nul
+del "c:\%ZipTop%\%ZipTop%\2019" /s /q 1>nul 2>nul
+del "c:\%ZipTop%\%ZipTop%\2020" /s /q 1>nul 2>nul
+del "c:\%ZipTop%\%ZipTop%\2021" /s /q 1>nul 2>nul
+del "c:\%ZipTop%\%ZipTop%\2022" /s /q 1>nul 2>nul
+del "c:\%ZipTop%\%ZipTop%\2023" /s /q 1>nul 2>nul
 
 
 rem -------------------------------------------------------------------
 echo Copying all %WHAT% files to ZIP dir for compression
 copy "%SOURCEPATH%\install\install.bat" "c:\%ZipTop%\%ZipTop%\"
-echo Stage Revit 2018 %WHAT% addin
-xcopy "%SOURCEPATH%\src\bin\2018\%WHAT%\*.*" "c:\%ZipTop%\%ZipTop%\2018\%WHAT%\" /S /Q /Y  2>nul
-echo Stage Revit 2019 %WHAT% addin
-xcopy "%SOURCEPATH%\src\bin\2019\%WHAT%\*.*" "c:\%ZipTop%\%ZipTop%\2019\%WHAT%\" /S /Q /Y  2>nul
-echo Stage Revit 2020 %WHAT% addin
-xcopy "%SOURCEPATH%\src\bin\2020\%WHAT%\*.*" "c:\%ZipTop%\%ZipTop%\2020\%WHAT%\" /S /Q /Y  2>nul
-echo Stage Revit 2021 %WHAT% addin
-xcopy "%SOURCEPATH%\src\bin\2021\%WHAT%\*.*" "c:\%ZipTop%\%ZipTop%\2021\%WHAT%\" /S /Q /Y  2>nul
-echo Stage Revit 2022 %WHAT% addin
-xcopy "%SOURCEPATH%\src\bin\2022\%WHAT%\*.*" "c:\%ZipTop%\%ZipTop%\2022\%WHAT%\" /S /Q /Y  2>nul
-echo Stage Revit 2023 %WHAT% addin
-xcopy "%SOURCEPATH%\src\bin\2023\%WHAT%\*.*" "c:\%ZipTop%\%ZipTop%\2023\%WHAT%\" /S /Q /Y  2>nul
 
+rem ------------ Check for files NOT to copy to the ZIP ---------------
+set EXCLUDE=
+if exist "%SOURCEPATH%\install\excludeFiles.txt" echo Excluding the following files from staging:
+if exist "%SOURCEPATH%\install\excludeFiles.txt" type "%SOURCEPATH%\install\excludeFiles.txt"
+if exist "%SOURCEPATH%\install\excludeFiles.txt" echo.
+if exist "%SOURCEPATH%\install\excludeFiles.txt" set EXCLUDE=/EXCLUDE:excludeFiles.txt
+
+echo Current Directory: %cd%
+echo Stage Revit 2018 %WHAT% addin: c:\%ZipTop%\%ZipTop%\2018\%WHAT%\
+echo xcopy "%SOURCEPATH%\src\bin\2018\%WHAT%\*.*" "c:\%ZipTop%\%ZipTop%\2018\%WHAT%\" %EXCLUDE% /S /Q /Y
+xcopy "%SOURCEPATH%\src\bin\2018\%WHAT%\*.*" "c:\%ZipTop%\%ZipTop%\2018\%WHAT%\" %EXCLUDE% /S /Q /Y  2>nul
+
+echo Stage Revit 2019 %WHAT% addin: c:\%ZipTop%\%ZipTop%\2019\%WHAT%\
+echo xcopy "%SOURCEPATH%\src\bin\2019\%WHAT%\*.*" "c:\%ZipTop%\%ZipTop%\2019\%WHAT%\" %EXCLUDE% /S /Q /Y 
+xcopy "%SOURCEPATH%\src\bin\2019\%WHAT%\*.*" "c:\%ZipTop%\%ZipTop%\2019\%WHAT%\" %EXCLUDE% /S /Q /Y  2>nul
+
+echo Stage Revit 2020 %WHAT% addin: c:\%ZipTop%\%ZipTop%\2020\%WHAT%\
+echo xcopy "%SOURCEPATH%\src\bin\2020\%WHAT%\*.*" "c:\%ZipTop%\%ZipTop%\2020\%WHAT%\" %EXCLUDE% /S /Q /Y
+xcopy "%SOURCEPATH%\src\bin\2020\%WHAT%\*.*" "c:\%ZipTop%\%ZipTop%\2020\%WHAT%\" %EXCLUDE% /S /Q /Y  2>nul
+
+echo Stage Revit 2021 %WHAT% addin: c:\%ZipTop%\%ZipTop%\2021\%WHAT%\
+echo xcopy "%SOURCEPATH%\src\bin\2021\%WHAT%\*.*" "c:\%ZipTop%\%ZipTop%\2021\%WHAT%\" %EXCLUDE% /S /Q /Y
+xcopy "%SOURCEPATH%\src\bin\2021\%WHAT%\*.*" "c:\%ZipTop%\%ZipTop%\2021\%WHAT%\" %EXCLUDE% /S /Q /Y  2>nul
+
+echo Stage Revit 2022 %WHAT% addin: c:\%ZipTop%\%ZipTop%\2022\%WHAT%\
+echo xcopy "%SOURCEPATH%\src\bin\2022\%WHAT%\*.*" "c:\%ZipTop%\%ZipTop%\2022\%WHAT%\" %EXCLUDE% /S /Q /Y
+xcopy "%SOURCEPATH%\src\bin\2022\%WHAT%\*.*" "c:\%ZipTop%\%ZipTop%\2022\%WHAT%\" %EXCLUDE% /S /Q /Y  2>nul
+
+echo Stage Revit 2023 %WHAT% addin: c:\%ZipTop%\%ZipTop%\2023\%WHAT%\
+echo xcopy "%SOURCEPATH%\src\bin\2023\%WHAT%\*.*" "c:\%ZipTop%\%ZipTop%\2023\%WHAT%\" %EXCLUDE% /S /Q /Y
+xcopy "%SOURCEPATH%\src\bin\2023\%WHAT%\*.*" "c:\%ZipTop%\%ZipTop%\2023\%WHAT%\" %EXCLUDE% /S /Q /Y  2>nul
 
 rem -------------------------------------------------------------------
 echo Files ready to be turned into a Zip
 if not exist "c:\%ZipTop%\%ZipTop%.zip" goto :ZIP
 del "c:\%ZipTop%\%ZipTop%.zip"
-
 
 rem -------------------------------------------------------------------
 :ZIP
@@ -119,7 +150,7 @@ if not exist "%WZIP%" echo Your install package is in a ZIP called, c:\%ZipTop%\
 if not exist "%WZIP%" echo To install, unzip that file and run install.bat
 if not exist "%WZIP%" goto :EOF
 
-echo Running WinZip Self Extraction Creation tool (consider getting licensed version to avoid unwanted )
+echo Running WinZip Self Extraction Creation tool (consider getting licensed version to avoid unwanted annoy messages)
 "%WZIP%" %ZipFile% -auto -setup -t %Text% -a %About% -c .\%ZipTop%\install.bat
 
 if not exist "c:\%ZipTop%\%ZipTop%.EXE" echo Your self extracting EXE failed get created.

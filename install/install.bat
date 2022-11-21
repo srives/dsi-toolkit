@@ -93,7 +93,7 @@ rem ----------------------------------------------------------------------------
 
   :make_manifest
   rem Create Manifest
-  set manifest=%adpath%\%1\DSIRevitToolkit%1.addin
+  set manifest=%adpath%%1\DSIRevitToolkit%1.addin
   echo Creating %1 manifest, pointing to %instdir%\%WHAT%\DSIRevitToolkit.dll
   echo Creating %1 manifest, pointing to %instdir%\%WHAT%\DSIRevitToolkit.dll >> %installLog%
   

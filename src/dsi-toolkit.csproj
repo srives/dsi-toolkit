@@ -330,166 +330,191 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+	
     <Reference Include="RevitAddInUtility" Condition="'$(Configuration)'=='Debug %28Revit 2018%29' OR '$(Configuration)'=='Release %28Revit 2018%29'">
-      <HintPath>c:\Program Files\Autodesk\Revit 2018\RevitAddInUtility.dll</HintPath>
+      <HintPath>..\ExternalLibraries\Revit2018\RevitAddInUtility.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="RevitAddInUtility" Condition="'$(Configuration)'=='Debug %28Revit 2019%29' OR '$(Configuration)'=='Release %28Revit 2019%29'">
-      <HintPath>c:\Program Files\Autodesk\Revit 2020\RevitAddInUtility.dll</HintPath>
+      <HintPath>..\ExternalLibraries\Revit2019\RevitAddInUtility.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="RevitAddInUtility" Condition="'$(Configuration)'=='Debug %28Revit 2020%29' OR '$(Configuration)'=='Release %28Revit 2020%29'">
-      <HintPath>c:\Program Files\Autodesk\Revit 2020\RevitAddInUtility.dll</HintPath>
+      <HintPath>..\ExternalLibraries\Revit2020\RevitAddInUtility.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="RevitAddInUtility" Condition="'$(Configuration)'=='Debug %28Revit 2021%29' OR '$(Configuration)'=='Release %28Revit 2021%29'">
-      <HintPath>c:\Program Files\Autodesk\Revit 2021\RevitAddInUtility.dll</HintPath>
+      <HintPath>..\ExternalLibraries\Revit2021\RevitAddInUtility.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="RevitAddInUtility" Condition="'$(Configuration)'=='Debug %28Revit 2022%29' OR '$(Configuration)'=='Release %28Revit 2022%29'">
-      <HintPath>c:\Program Files\Autodesk\Revit 2022\RevitAddInUtility.dll</HintPath>
+      <HintPath>..\ExternalLibraries\Revit2022\RevitAddInUtility.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="RevitAddInUtility" Condition="'$(Configuration)'=='Debug %28Revit 2023%29' OR '$(Configuration)'=='Release %28Revit 2023%29'">
-      <HintPath>c:\Program Files\Autodesk\Revit 2023\RevitAddInUtility.dll</HintPath>
+      <HintPath>..\ExternalLibraries\Revit2023\RevitAddInUtility.dll</HintPath>
       <Private>False</Private>
     </Reference>
+	
     <Reference Include="RevitAPIBrowserUtils" Condition="'$(Configuration)'=='Debug %28Revit 2018%29' OR '$(Configuration)'=='Release %28Revit 2018%29'">
-      <HintPath>c:\Program Files\Autodesk\Revit 2018\RevitAPIBrowserUtils.dll</HintPath>
+      <HintPath>..\ExternalLibraries\Revit2018\RevitAPIBrowserUtils.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="RevitAPIBrowserUtils" Condition="'$(Configuration)'=='Debug %28Revit 2019%29' OR '$(Configuration)'=='Release %28Revit 2019%29'">
-      <HintPath>c:\Program Files\Autodesk\Revit 2020\RevitAPIBrowserUtils.dll</HintPath>
+      <HintPath>..\ExternalLibraries\Revit2019\RevitAPIBrowserUtils.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="RevitAPIBrowserUtils" Condition="'$(Configuration)'=='Debug %28Revit 2020%29' OR '$(Configuration)'=='Release %28Revit 2020%29'">
-      <HintPath>c:\Program Files\Autodesk\Revit 2020\RevitAPIBrowserUtils.dll</HintPath>
+      <HintPath>..\ExternalLibraries\Revit2020\RevitAPIBrowserUtils.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="RevitAPIBrowserUtils" Condition="'$(Configuration)'=='Debug %28Revit 2021%29' OR '$(Configuration)'=='Release %28Revit 2021%29'">
-      <HintPath>c:\Program Files\Autodesk\Revit 2021\RevitAPIBrowserUtils.dll</HintPath>
+      <HintPath>..\ExternalLibraries\Revit2021\RevitAPIBrowserUtils.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="RevitAPIBrowserUtils" Condition="'$(Configuration)'=='Debug %28Revit 2022%29' OR '$(Configuration)'=='Release %28Revit 2022%29'">
-      <HintPath>c:\Program Files\Autodesk\Revit 2022\RevitAPIBrowserUtils.dll</HintPath>
+      <HintPath>..\ExternalLibraries\Revit2022\RevitAPIBrowserUtils.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="RevitAPIBrowserUtils" Condition="'$(Configuration)'=='Debug %28Revit 2023%29' OR '$(Configuration)'=='Release %28Revit 2023%29'">
-      <HintPath>c:\Program Files\Autodesk\Revit 2023\RevitAPIBrowserUtils.dll</HintPath>
+      <HintPath>..\ExternalLibraries\Revit2023\RevitAPIBrowserUtils.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+	
+    <Reference Include="RevitAPIExtData" Condition="'$(Configuration)'=='Debug %28Revit 2022%29' OR '$(Configuration)'=='Release %28Revit 2022%29'">
+      <HintPath>..\ExternalLibraries\Revit2022\RevitAPIExtData.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="RevitAPIExtData" Condition="'$(Configuration)'=='Debug %28Revit 2023%29' OR '$(Configuration)'=='Release %28Revit 2023%29'">
-      <HintPath>c:\Program Files\Autodesk\Revit 2023\RevitAPIExtData.dll</HintPath>
+      <HintPath>..\ExternalLibraries\Revit2023\RevitAPIExtData.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="RevitAPIExtData" Condition="'$(Configuration)'=='Debug %28Revit 2022%29' OR '$(Configuration)'=='Release %28Revit 2022%29'">
-      <HintPath>c:\Program Files\Autodesk\Revit 2022\RevitAPIExtData.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
+	
     <Reference Include="RevitAPIFoundation" Condition="'$(Configuration)'=='Debug %28Revit 2018%29' OR '$(Configuration)'=='Release %28Revit 2018%29'">
-      <HintPath>c:\Program Files\Autodesk\Revit 2018\RevitAPIFoundation.dll</HintPath>
+      <HintPath>..\ExternalLibraries\Revit2018\RevitAPIFoundation.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="RevitAPIFoundation" Condition="'$(Configuration)'=='Debug %28Revit 2019%29' OR '$(Configuration)'=='Release %28Revit 2019%29'">
-      <HintPath>c:\Program Files\Autodesk\Revit 2020\RevitAPIFoundation.dll</HintPath>
+      <HintPath>..\ExternalLibraries\Revit2019\RevitAPIFoundation.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="RevitAPIFoundation" Condition="'$(Configuration)'=='Debug %28Revit 2020%29' OR '$(Configuration)'=='Release %28Revit 2020%29'">
-      <HintPath>c:\Program Files\Autodesk\Revit 2020\RevitAPIFoundation.dll</HintPath>
+      <HintPath>..\ExternalLibraries\Revit2020\RevitAPIFoundation.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="RevitAPIFoundation" Condition="'$(Configuration)'=='Debug %28Revit 2021%29' OR '$(Configuration)'=='Release %28Revit 2021%29'">
-      <HintPath>c:\Program Files\Autodesk\Revit 2021\RevitAPIFoundation.dll</HintPath>
+      <HintPath>..\ExternalLibraries\Revit2021\RevitAPIFoundation.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="RevitAPIFoundation" Condition="'$(Configuration)'=='Debug %28Revit 2022%29' OR '$(Configuration)'=='Release %28Revit 2022%29'">
-      <HintPath>c:\Program Files\Autodesk\Revit 2022\RevitAPIFoundation.dll</HintPath>
+      <HintPath>..\ExternalLibraries\Revit2022\RevitAPIFoundation.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="RevitAPIFoundation" Condition="'$(Configuration)'=='Debug %28Revit 2023%29' OR '$(Configuration)'=='Release %28Revit 2023%29'">
-      <HintPath>c:\Program Files\Autodesk\Revit 2023\RevitAPIFoundation.dll</HintPath>
+      <HintPath>..\ExternalLibraries\Revit2023\RevitAPIFoundation.dll</HintPath>
+      <Private>False</Private>
     </Reference>
+	
     <Reference Include="RevitAPIIFC" Condition="'$(Configuration)'=='Debug %28Revit 2018%29' OR '$(Configuration)'=='Release %28Revit 2018%29'">
-      <HintPath>c:\Program Files\Autodesk\Revit 2018\RevitAPIIFC.dll</HintPath>
+      <HintPath>..\ExternalLibraries\Revit2018\RevitAPIIFC.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="RevitAPIIFC" Condition="'$(Configuration)'=='Debug %28Revit 2019%29' OR '$(Configuration)'=='Release %28Revit 2019%29'">
-      <HintPath>c:\Program Files\Autodesk\Revit 2020\RevitAPIIFC.dll</HintPath>
+      <HintPath>..\ExternalLibraries\Revit2019\RevitAPIIFC.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="RevitAPIIFC" Condition="'$(Configuration)'=='Debug %28Revit 2020%29' OR '$(Configuration)'=='Release %28Revit 2020%29'">
-      <HintPath>c:\Program Files\Autodesk\Revit 2020\RevitAPIIFC.dll</HintPath>
+      <HintPath>..\ExternalLibraries\Revit2020\RevitAPIIFC.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="RevitAPIIFC" Condition="'$(Configuration)'=='Debug %28Revit 2021%29' OR '$(Configuration)'=='Release %28Revit 2021%29'">
-      <HintPath>c:\Program Files\Autodesk\Revit 2021\RevitAPIIFC.dll</HintPath>
+      <HintPath>..\ExternalLibraries\Revit2021\RevitAPIIFC.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="RevitAPIIFC" Condition="'$(Configuration)'=='Debug %28Revit 2022%29' OR '$(Configuration)'=='Release %28Revit 2022%29'">
-      <HintPath>c:\Program Files\Autodesk\Revit 2022\RevitAPIIFC.dll</HintPath>
+      <HintPath>..\ExternalLibraries\Revit2022\RevitAPIIFC.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="RevitAPIIFC" Condition="'$(Configuration)'=='Debug %28Revit 2023%29' OR '$(Configuration)'=='Release %28Revit 2023%29'">
-      <HintPath>c:\Program Files\Autodesk\Revit 2023\RevitAPIIFC.dll</HintPath>
+      <HintPath>..\ExternalLibraries\Revit2023\RevitAPIIFC.dll</HintPath>
       <Private>False</Private>
     </Reference>
+
     <Reference Include="RevitAPI" Condition="'$(Configuration)'=='Debug %28Revit 2018%29' OR '$(Configuration)'=='Release %28Revit 2018%29'">
-      <HintPath>c:\Program Files\Autodesk\Revit 2018\RevitAPI.dll</HintPath>
+      <HintPath>..\ExternalLibraries\Revit2018\RevitAPI.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="RevitAPI" Condition="'$(Configuration)'=='Debug %28Revit 2019%29' OR '$(Configuration)'=='Release %28Revit 2019%29'">
-      <HintPath>c:\Program Files\Autodesk\Revit 2020\RevitAPI.dll</HintPath>
+      <HintPath>..\ExternalLibraries\Revit2019\RevitAPI.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="RevitAPI" Condition="'$(Configuration)'=='Debug %28Revit 2020%29' OR '$(Configuration)'=='Release %28Revit 2020%29'">
-      <HintPath>c:\Program Files\Autodesk\Revit 2020\RevitAPI.dll</HintPath>
+      <HintPath>..\ExternalLibraries\Revit2020\RevitAPI.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="RevitAPI" Condition="'$(Configuration)'=='Debug %28Revit 2021%29' OR '$(Configuration)'=='Release %28Revit 2021%29'">
-      <HintPath>c:\Program Files\Autodesk\Revit 2021\RevitAPI.dll</HintPath>
+      <HintPath>..\ExternalLibraries\Revit2021\RevitAPI.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="RevitAPI" Condition="'$(Configuration)'=='Debug %28Revit 2022%29' OR '$(Configuration)'=='Release %28Revit 2022%29'">
-      <HintPath>c:\Program Files\Autodesk\Revit 2022\RevitAPI.dll</HintPath>
+      <HintPath>..\ExternalLibraries\Revit2022\RevitAPI.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="RevitAPI" Condition="'$(Configuration)'=='Debug %28Revit 2023%29' OR '$(Configuration)'=='Release %28Revit 2023%29'">
-      <HintPath>c:\Program Files\Autodesk\Revit 2023\RevitAPI.dll</HintPath>
+      <HintPath>..\ExternalLibraries\Revit2023\RevitAPI.dll</HintPath>
       <Private>False</Private>
     </Reference>
+
     <Reference Include="RevitAPIUI" Condition="'$(Configuration)'=='Debug %28Revit 2018%29' OR '$(Configuration)'=='Release %28Revit 2018%29'">
-      <HintPath>c:\Program Files\Autodesk\Revit 2018\RevitAPIUI.dll</HintPath>
+      <HintPath>..\ExternalLibraries\Revit2018\RevitAPIUI.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="RevitAPIUI" Condition="'$(Configuration)'=='Debug %28Revit 2019%29' OR '$(Configuration)'=='Release %28Revit 2019%29'">
-      <HintPath>c:\Program Files\Autodesk\Revit 2020\RevitAPIUI.dll</HintPath>
-    </Reference>
-    <Reference Include="RevitAPIUI" Condition="'$(Configuration)'=='Debug %28Revit 2020%29' OR '$(Configuration)'=='Release %28Revit 2020%29'">
-      <HintPath>c:\Program Files\Autodesk\Revit 2020\RevitAPIUI.dll</HintPath>
-    </Reference>
-    <Reference Include="RevitAPIUI" Condition="'$(Configuration)'=='Debug %28Revit 2021%29' OR '$(Configuration)'=='Release %28Revit 2021%29'">
-      <HintPath>c:\Program Files\Autodesk\Revit 2021\RevitAPIUI.dll</HintPath>
-    </Reference>
-    <Reference Include="RevitAPIUI" Condition="'$(Configuration)'=='Debug %28Revit 2022%29' OR '$(Configuration)'=='Release %28Revit 2022%29'">
-      <HintPath>c:\Program Files\Autodesk\Revit 2022\RevitAPIUI.dll</HintPath>
-    </Reference>
-    <Reference Include="RevitAPIUI" Condition="'$(Configuration)'=='Debug %28Revit 2023%29' OR '$(Configuration)'=='Release %28Revit 2023%29'">
-      <HintPath>c:\Program Files\Autodesk\Revit 2023\RevitAPIUI.dll</HintPath>
+      <HintPath>..\ExternalLibraries\Revit2019\RevitAPIUI.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="RevitAPIUI" Condition="'$(Configuration)'=='Debug %28Revit 2020%29' OR '$(Configuration)'=='Release %28Revit 2020%29'">
+      <HintPath>..\ExternalLibraries\Revit2020\RevitAPIUI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="RevitAPIUI" Condition="'$(Configuration)'=='Debug %28Revit 2021%29' OR '$(Configuration)'=='Release %28Revit 2021%29'">
+      <HintPath>..\ExternalLibraries\Revit2021\RevitAPIUI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="RevitAPIUI" Condition="'$(Configuration)'=='Debug %28Revit 2022%29' OR '$(Configuration)'=='Release %28Revit 2022%29'">
+      <HintPath>..\ExternalLibraries\Revit2022\RevitAPIUI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="RevitAPIUI" Condition="'$(Configuration)'=='Debug %28Revit 2023%29' OR '$(Configuration)'=='Release %28Revit 2023%29'">
+      <HintPath>..\ExternalLibraries\Revit2023\RevitAPIUI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+
     <Reference Include="RevitUIAPI" Condition="'$(Configuration)'=='Debug %28Revit 2018%29' OR '$(Configuration)'=='Release %28Revit 2018%29'">
-      <HintPath>c:\Program Files\Autodesk\Revit 2018\RevitUIAPI.dll</HintPath>
+      <HintPath>..\ExternalLibraries\Revit2018\RevitUIAPI.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="RevitUIAPI" Condition="'$(Configuration)'=='Debug %28Revit 2019%29' OR '$(Configuration)'=='Release %28Revit 2019%29'">
-      <HintPath>c:\Program Files\Autodesk\Revit 2020\RevitUIAPI.dll</HintPath>
+      <HintPath>..\ExternalLibraries\Revit2019\RevitUIAPI.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="RevitUIAPI" Condition="'$(Configuration)'=='Debug %28Revit 2020%29' OR '$(Configuration)'=='Release %28Revit 2020%29'">
-      <HintPath>c:\Program Files\Autodesk\Revit 2020\RevitUIAPI.dll</HintPath>
+      <HintPath>..\ExternalLibraries\Revit2020\RevitUIAPI.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="RevitUIAPI" Condition="'$(Configuration)'=='Debug %28Revit 2021%29' OR '$(Configuration)'=='Release %28Revit 2022%29'">
-      <HintPath>c:\Program Files\Autodesk\Revit 2021\RevitUIAPI.dll</HintPath>
+      <HintPath>..\ExternalLibraries\Revit2021\RevitUIAPI.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="RevitUIAPI" Condition="'$(Configuration)'=='Debug %28Revit 2022%29' OR '$(Configuration)'=='Release %28Revit 2022%29'">
-      <HintPath>c:\Program Files\Autodesk\Revit 2022\RevitUIAPI.dll</HintPath>
+      <HintPath>..\ExternalLibraries\Revit2022\RevitUIAPI.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="RevitUIAPI" Condition="'$(Configuration)'=='Debug %28Revit 2023%29' OR '$(Configuration)'=='Release %28Revit 2023%29'">
-      <HintPath>c:\Program Files\Autodesk\Revit 2023\RevitUIAPI.dll</HintPath>
+      <HintPath>..\ExternalLibraries\Revit2023\RevitUIAPI.dll</HintPath>
       <Private>False</Private>
     </Reference>
+	
     <Reference Include="Serilog, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
       <HintPath>..\packages\Serilog.2.9.0\lib\net46\Serilog.dll</HintPath>
     </Reference>
