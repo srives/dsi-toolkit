@@ -1,6 +1,8 @@
 @echo off
 rem ----------------------------------------------------------------------------------------------
-rem  GTP STRATUS 2022 build script for DSI Revit ToolKit 
+rem  GTP STRATUS 2022 build script for DSI Revit ToolKit
+rem  Builds x64.
+rem         If you want to build ARM64, I don't think Revit supports that. 
 rem
 rem  8 Nov 2022
 rem  Steve.Rives@gogtp.com
@@ -37,15 +39,15 @@ goto :EOF
 	
     echo. > debug%1.txt
     echo. > release%1.txt
-	"%MSBUILD%" dsi-toolkit.sln "/property:Configuration=Debug (Revit %1)" >> debug%1.txt
-    if exist .\src\bin\%1\Debug\DSIRevitToolkit.dll       echo          %1 Debug   build: SUCCESS
-    if not exist .\src\bin\%1\Debug\DSIRevitToolkit.dll   echo          %1 Debug   build: FAILED to create bin\%1\Debug\DSIRevitToolkit.dll
-    if not exist .\src\bin\%1\Debug\DSIRevitToolkit.dll   type debug%1.txt | find "Error"
+	"%MSBUILD%" dsi-toolkit.sln "/property:Configuration=Debug (Revit %1)" /p:Platform=x64 >> debug%1.txt
+    if exist ".\src\bin\x64\Debug (Revit %1)\DSIRevitToolkit.dll"       echo          %1 Debug   build: SUCCESS
+    if not exist ".\src\bin\x64\Debug (Revit %1)\DSIRevitToolkit.dll"   echo          %1 Debug   build: FAILED to create bin\x64\Debug (Revit %1)\Debug\DSIRevitToolkit.dll
+    if not exist ".\src\bin\x64\Debug (Revit %1)\DSIRevitToolkit.dll"   type debug%1.txt | find "Error"
 		
-	"%MSBUILD%" dsi-toolkit.sln  "/property:Configuration=Release (Revit %1)" >> release%1.txt
-    if exist .\src\bin\%1\Release\DSIRevitToolkit.dll     echo          %1 Release build: SUCCESS
-    if not exist .\src\bin\%1\Release\DSIRevitToolkit.dll echo          %1 Release build: FAILED to create bin\%1\Release\DSIRevitToolkit.dll
-	if not exist .\src\bin\%1\Release\DSIRevitToolkit.dll type release%1.txt | find "Error"
+	"%MSBUILD%" dsi-toolkit.sln  "/property:Configuration=Release (Revit %1)" /p:Platform=x64 >> release%1.txt
+    if exist ".\src\bin\x64\Release (Revit %1)\DSIRevitToolkit.dll"     echo          %1 Release build: SUCCESS
+    if not exist ".\src\bin\x64\Release (Revit %1)\DSIRevitToolkit.dll" echo          %1 Release build: FAILED to create bin\x64\Release (Revit %1)\DSIRevitToolkit.dll
+	if not exist ".\src\bin\x64\Release (Revit %1)\DSIRevitToolkit.dll" type release%1.txt | find "Error"
 	
 	del debug%1.txt 1>nul 2>nul
 	del release%1.txt 1>nul 2>nul

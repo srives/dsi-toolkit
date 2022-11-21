@@ -103,9 +103,9 @@ goto :READY
 rem -------------------------------------------------------------------
 rem -- Subroutine to CHECK to make sure we have something to install --
 	:CHECK
-	  if not exist "%SOURCEPATH%\src\bin\%1\%WHAT%\DSIRevitToolkit.dll"   echo %1 %WHAT%  DSI Revit Toolkit is Missing (DSIRevitToolkit.dll)
-	  if exist "%SOURCEPATH%\src\bin\%1\%WHAT%\DSIRevitToolkit.dll"       set found=1
-	  if exist "%SOURCEPATH%\src\bin\%1\%WHAT%\DSIRevitToolkit.dll"       echo Including %1 %WHAT%  DSI Revit Toolkit in Installer
+	  if not exist "%SOURCEPATH%\src\bin\x64\%WHAT% (Revit %1)\DSIRevitToolkit.dll"   echo %1 %WHAT%  DSI Revit Toolkit is Missing (DSIRevitToolkit.dll)
+	  if exist "%SOURCEPATH%\src\bin\x64\%WHAT% (Revit %1)\DSIRevitToolkit.dll"       set found=1
+	  if exist "%SOURCEPATH%\src\bin\x64\%WHAT% (Revit %1)\DSIRevitToolkit.dll"       echo Including %1 %WHAT%  DSI Revit Toolkit in Installer
 	goto :EOF
 rem -------------------------------------------------------------------
 
@@ -149,32 +149,21 @@ if exist "%SOURCEPATH%\install\excludeFiles.txt" echo.
 if exist "%SOURCEPATH%\install\excludeFiles.txt" set EXCLUDE=/EXCLUDE:excludeFiles.txt
 
 echo Current Directory: %cd%
-echo Stage Revit 2018 %WHAT% addin: c:\%ZipTop%\%ZipTop%\2018\%WHAT%\
-echo xcopy "%SOURCEPATH%\src\bin\2018\%WHAT%\*.*" "c:\%ZipTop%\%ZipTop%\2018\%WHAT%\" %EXCLUDE% /S /Q /Y
-xcopy "%SOURCEPATH%\src\bin\2018\%WHAT%\*.*" "c:\%ZipTop%\%ZipTop%\2018\%WHAT%\" %EXCLUDE% /S /Q /Y  2>nul
-
-echo Stage Revit 2019 %WHAT% addin: c:\%ZipTop%\%ZipTop%\2019\%WHAT%\
-echo xcopy "%SOURCEPATH%\src\bin\2019\%WHAT%\*.*" "c:\%ZipTop%\%ZipTop%\2019\%WHAT%\" %EXCLUDE% /S /Q /Y 
-xcopy "%SOURCEPATH%\src\bin\2019\%WHAT%\*.*" "c:\%ZipTop%\%ZipTop%\2019\%WHAT%\" %EXCLUDE% /S /Q /Y  2>nul
-
-echo Stage Revit 2020 %WHAT% addin: c:\%ZipTop%\%ZipTop%\2020\%WHAT%\
-echo xcopy "%SOURCEPATH%\src\bin\2020\%WHAT%\*.*" "c:\%ZipTop%\%ZipTop%\2020\%WHAT%\" %EXCLUDE% /S /Q /Y
-xcopy "%SOURCEPATH%\src\bin\2020\%WHAT%\*.*" "c:\%ZipTop%\%ZipTop%\2020\%WHAT%\" %EXCLUDE% /S /Q /Y  2>nul
-
-echo Stage Revit 2021 %WHAT% addin: c:\%ZipTop%\%ZipTop%\2021\%WHAT%\
-echo xcopy "%SOURCEPATH%\src\bin\2021\%WHAT%\*.*" "c:\%ZipTop%\%ZipTop%\2021\%WHAT%\" %EXCLUDE% /S /Q /Y
-xcopy "%SOURCEPATH%\src\bin\2021\%WHAT%\*.*" "c:\%ZipTop%\%ZipTop%\2021\%WHAT%\" %EXCLUDE% /S /Q /Y  2>nul
-
-echo Stage Revit 2022 %WHAT% addin: c:\%ZipTop%\%ZipTop%\2022\%WHAT%\
-echo xcopy "%SOURCEPATH%\src\bin\2022\%WHAT%\*.*" "c:\%ZipTop%\%ZipTop%\2022\%WHAT%\" %EXCLUDE% /S /Q /Y
-xcopy "%SOURCEPATH%\src\bin\2022\%WHAT%\*.*" "c:\%ZipTop%\%ZipTop%\2022\%WHAT%\" %EXCLUDE% /S /Q /Y  2>nul
-
-echo Stage Revit 2023 %WHAT% addin: c:\%ZipTop%\%ZipTop%\2023\%WHAT%\
-echo xcopy "%SOURCEPATH%\src\bin\2023\%WHAT%\*.*" "c:\%ZipTop%\%ZipTop%\2023\%WHAT%\" %EXCLUDE% /S /Q /Y
-xcopy "%SOURCEPATH%\src\bin\2023\%WHAT%\*.*" "c:\%ZipTop%\%ZipTop%\2023\%WHAT%\" %EXCLUDE% /S /Q /Y  2>nul
-
+call :STAGE_BY_YEAR 2018
+call :STAGE_BY_YEAR 2019
+call :STAGE_BY_YEAR 2020
+call :STAGE_BY_YEAR 2021
+call :STAGE_BY_YEAR 2022
+call :STAGE_BY_YEAR 2023
 echo Files ready to be turned into a Zip
+goto :ZIP
 
+rem -------------------------------------------------------------------
+:STAGE_BY_YEAR
+  echo Stage Revit %1 %WHAT% addin: c:\%ZipTop%\%ZipTop%\%1\%WHAT%\
+  echo xcopy "%SOURCEPATH%\src\bin\x64\%WHAT% (Revit %1)\*.*" "c:\%ZipTop%\%ZipTop%\%1\%WHAT%\"
+  xcopy "%SOURCEPATH%\src\bin\x64\%WHAT% (Revit %1)\*.*" "c:\%ZipTop%\%ZipTop%\%1\%WHAT%\" %EXCLUDE% /S /Q /Y  2>nul
+goto :EOF
 
 rem -------------------------------------------------------------------
 :ZIP
