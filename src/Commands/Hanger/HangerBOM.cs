@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Windows;
 
 namespace DSI.Commands.Hanger
 {
@@ -20,8 +21,13 @@ namespace DSI.Commands.Hanger
             {
                 var ret = @"\\budacad\cad\Office_Templates\Excel\";
                 // This was added for debugging off the local path for GTP developers
-                if (Directory.Exists("C:\\budacad\\cad\\Office_Templates\\Excel\\"))
-                    ret = @"C:\budacad\cad\Office_Templates\Excel\";
+                if (!Directory.Exists(ret))
+                {
+                    if (Directory.Exists(@"C:\budacad\cad\Office_Templates\Excel\"))
+                    {
+                        ret = @"C:\budacad\cad\Office_Templates\Excel\";
+                    }
+                }
                 return ret;
             }
         }
@@ -53,6 +59,11 @@ namespace DSI.Commands.Hanger
             if (commandData == null)
             {
                 throw new ArgumentNullException(paramName: nameof(commandData));
+            }
+
+            if (csv == false && !Directory.Exists(ExcelRoot))
+            {
+                MessageBox.Show("Could not find " + ExcelRoot, "Missing Excel Templates");
             }
 
             using (var filteredElements = GetUserSelectedElementsByFilter(commandData.Application, new HangerSelectionFilter()))
