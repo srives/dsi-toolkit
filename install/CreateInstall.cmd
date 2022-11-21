@@ -1,46 +1,90 @@
 @echo off
 rem -------------------------------------------------------------------
-rem     This batch script will take your source code output
-rem     and create an EXE file that is an installer.
+rem     This batch script will take your source code 
+rem     delete the build, and rebuild it. It will then
+rem     create an EXE file that is an installer.
+rem
 rem     This program uses the paid version of WinZip
 rem     that turns ZIPs into EXE files.
-rem     Written for DSI, for their Revit Toolkit
 rem
-rem     Debug vs. Release
-rem
-rem       By default,
-rem             Creates RELEASE version of the installer
-rem       To Create DeBUG version, use:
+rem     ----------------------------------------------------
+rem     Options:
+rem     ----------------------------------------------------
+rem     -D:   To Create a Debug version of the installer, use:
 rem             CreateInstall -D
+rem          By default, creates a RELEASE version of the DLLS.
 rem
+rem     -S:  To create a ZIP copy of the source code:
+rem             CreateInstall -S
+rem          This would be for the case that you are at GTP,
+rem          and working on the code for DSI, and want to send
+rem          back a copy of all your changes to DSI.
+rem
+rem     -R:  To run the install after it is created
+rem             CreateInstall -R
+rem             Warning: this replaces your manifests files
+rem
+rem     Written for DSI, for their Revit Toolkit
 rem     8 Nov 2022
 rem     Steve.Rives@gogtp.com
 rem     GTP Services
 rem
 rem -------------------------------------------------------------------
 
-rem ------------------------- Configuration ---------------------------
-rem Change these if you move the code path
-rem Source Path is the place under which there is the dsi-toolkit.sln file.
+:ENV_VARS
+    rem Change these if you move the directory where this code lives
+    rem Source Path is the place under which there is the dsi-toolkit.sln file:
 	set SOURCEPATH=C:\repos\DSI\revit-toolkit
-	set pwFile=C:\repos\secrets\sign_pw.cmd
-	set signTool=C:\Program Files (x86)\Windows Kits\10\App Certification Kit\signtool.exe
-	set WHAT=Release
-	set ZipTop=DSIRevitToolkit
-	set WZIP=C:\Program Files (x86)\WinZip Self-Extractor\WZIPSE32.EXE
-	set ZipFile=c:\%ZipTop%\%ZipTop%.zip
-	set EXEFile=c:\%ZipTop%\%ZipTop%.exe
+	set SOURCE_ZIP=C:\repos\DSI\dsi-revit-toolkit-source.zip
 	set Text=%SOURCEPATH%\install\Install.message.txt
 	set About=%SOURCEPATH%\install\Install.message.txt
-	if /I (%1)==(-D) set WHAT=Debug
+
+    rem We will STAGE the files for the installer to here:
+	set ZipTop=DSIRevitToolkit
+	set ZipFile=c:\%ZipTop%\%ZipTop%.zip
+	set EXEFile=c:\%ZipTop%\%ZipTop%.exe
+
+    rem We use a tool that turns a ZIP into an EXE (it is installed here):
+	set WZIP=C:\Program Files (x86)\WinZip Self-Extractor\WZIPSE32.EXE
+	
+	rem If you have a signing cert, point to it here (if not, don't worry about it):
+	set pwFile=C:\repos\secrets\sign_pw.cmd
+	set signTool=C:\Program Files (x86)\Windows Kits\10\App Certification Kit\signtool.exe
 	set signFile=C:\repos\Stratus\Certificates\GTPServices.pfx
 	if not exist "%signFile%" set signFile=C:\repos\Stratus\Certificates\GTPServices,LLC.pfx
 
 rem -------------------------------------------------------------------
-echo CLEAN bin directory "%SOURCEPATH%\src\bin\"
-del "%SOURCEPATH%\src\bin\*.*" /s /q 1>nul 2>nul
+:COMMAND_LINE_OPTIONS
+	set WHAT=Release
+	set ZIP_SOURCE=0
+	set RUN_INSTALL=0
+	set LOOP=0
+	:LOOP_TOP
+      set /A LOOP=LOOP+1
+	  if /I (%1)==(-D) set WHAT=Debug
+	  if /I (%1)==(-D) shift
+	  if /I (%1)==(-S) set ZIP_SOURCE=1
+	  if /I (%1)==(-S) shift
+	  if /I (%1)==(-R) set RUN_INSTALL=1
+	  if /I (%1)==(-R) shift
+	if not (%LOOP%) == (4) goto :LOOP_TOP
 
 rem -------------------------------------------------------------------
+:CLEAN
+echo CLEAN bin directory "%SOURCEPATH%\src\bin\"
+rd /s /q "%SOURCEPATH%\src\bin\" 1>nul 2>nul
+rd /s /q "%SOURCEPATH%\src\obj\" 1>nul 2>nul
+
+rem -------------------------------------------------------------------
+:ZIPSOURCE
+if (%ZIP_SOURCE%)==(0) goto :BUILD
+echo Creating Source CODE Zip at %SOURCE_ZIP%
+del "%SOURCE_ZIP%" 1>nul 2>nul
+if exist "%SOURCE_ZIP%" echo You have %SOURCE_ZIP% open. Close it.
+powershell Compress-Archive "%SOURCEPATH%" -DestinationPath "%SOURCE_ZIP%"
+
+rem -------------------------------------------------------------------
+:BUILD
 echo Building DSI Revit Toolkit
 echo Creating %WHAT% version of the installer (pass in -D to this script to create the DEBUG version)
 call .\build.cmd %WHAT%
@@ -66,8 +110,8 @@ rem -- Subroutine to CHECK to make sure we have something to install --
 rem -------------------------------------------------------------------
 
 
-:READY
 rem -------------------------------------------------------------------
+:READY
 echo Ready to create DSI Revit Install at c:\%ZipTop%\
 c:
 echo Signing all relevant EXE files
@@ -93,6 +137,7 @@ del "c:\%ZipTop%\%ZipTop%\2023" /s /q 1>nul 2>nul
 
 
 rem -------------------------------------------------------------------
+:STAGE
 echo Copying all %WHAT% files to ZIP dir for compression
 copy "%SOURCEPATH%\install\install.bat" "c:\%ZipTop%\%ZipTop%\"
 
@@ -128,14 +173,15 @@ echo Stage Revit 2023 %WHAT% addin: c:\%ZipTop%\%ZipTop%\2023\%WHAT%\
 echo xcopy "%SOURCEPATH%\src\bin\2023\%WHAT%\*.*" "c:\%ZipTop%\%ZipTop%\2023\%WHAT%\" %EXCLUDE% /S /Q /Y
 xcopy "%SOURCEPATH%\src\bin\2023\%WHAT%\*.*" "c:\%ZipTop%\%ZipTop%\2023\%WHAT%\" %EXCLUDE% /S /Q /Y  2>nul
 
-rem -------------------------------------------------------------------
 echo Files ready to be turned into a Zip
-if not exist "c:\%ZipTop%\%ZipTop%.zip" goto :ZIP
-del "c:\%ZipTop%\%ZipTop%.zip"
+
 
 rem -------------------------------------------------------------------
 :ZIP
 echo Creating Zip
+rem Delete the oldcopu
+del "c:\%ZipTop%\%ZipTop%.zip" 1>nul 2>nul
+if exist "c:\%ZipTop%\%ZipTop%.zip" echo ERROR: you have "c:\%ZipTop%\%ZipTop%.zip" open. Close it.
 powershell Compress-Archive "c:\%ZipTop%\%ZipTop%" "c:\%ZipTop%\%ZipTop%.zip"
 if not exist "c:\%ZipTop%\%ZipTop%.exe" goto :EXE
 mkdir "c:\%ZipTop%\previous\" 2>nul
@@ -172,13 +218,21 @@ call %pwFile%
 rem Sign the self-extracting EXE file
 "%signTool%" sign /td SHA256 /fd SHA256 /f "%signFile%" /p %pw% /tr http://timestamp.digicert.com/ %EXEFile%
 
-
 rem -------------------------------------------------------------------
 :RUN
+if (%RUN_INSTALL%)==(0) goto :FINAL_NOTE
 echo.
 echo --------------------- Running Install Program --------------------
 echo          Running: c:\%ZipTop%\%ZipTop%
 echo Warning: this replaces your manifests files
 echo          Run install.bat -dev to reset your manifests for dev testing
-
 "c:\%ZipTop%\%ZipTop%"
+echo          Ran the latestet instance of the DSI toolkit installer.
+
+rem -------------------------------------------------------------------
+:FINAL_NOTE
+echo.
+if (%ZIP_SOURCE%)==(1) echo Your SOURCE CODE is zipped here: %SOURCE_ZIP% (send this to DSI)
+if (%ZIP_SOURCE%)==(0) echo If you want to create a ZIP file of the source code, re-run as: CreateInstall -S
+echo Your INSTALLER is: c:\%ZipTop%\%ZipTop%.EXE
+echo.
