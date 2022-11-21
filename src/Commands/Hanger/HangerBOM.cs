@@ -7,6 +7,7 @@ using DSI.Filters;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 
 namespace DSI.Commands.Hanger
 {
@@ -17,11 +18,11 @@ namespace DSI.Commands.Hanger
         {
             get
             {
-#if DEBUG
-                return @"C:\budacad\cad\Office_Templates\Excel\";
-#else
-                return @"\\budacad\cad\Office_Templates\Excel\";
-#endif
+                var ret = @"\\budacad\cad\Office_Templates\Excel\";
+                // This was added for debugging off the local path for GTP developers
+                if (Directory.Exists("C:\\budacad\\cad\\Office_Templates\\Excel\\"))
+                    ret = @"C:\budacad\cad\Office_Templates\Excel\";
+                return ret;
             }
         }
 
