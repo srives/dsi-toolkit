@@ -11,6 +11,10 @@ rem                          install -dev
 rem         And it will use the development machine build path as the source of the
 rem         revit manifest files (a developer would do this while building/debugging.
 rem
+rem  To check install results, check this file:
+rem
+rem         %LOCALAPPDATA%\dsi-revit-toolkit\install.txt
+rem
 rem  8 Nov 2022
 rem  Steve.Rives@gogtp.com
 rem  GTP Services
@@ -28,9 +32,18 @@ rem ----------------------------------------------------------------------------
   if /I (%1)==(-dev) set WHAT=Debug
   set installLog=%DSIRoot%\install.txt
 
+  echo. >> %installLog%  
+  echo. >> %installLog%
+  echo ------------------------------------------------- >> %installLog%
   echo Running DSI Revit Toolkit Installer >> %installLog%
   date /T >> %installLog%
   time /T >> %installLog%
+
+  echo Installer Contents: >> %installLog%
+  echo ------------------------------------------------- >> %installLog%
+  dir %UnzipPath% /s /b >> %installLog%
+  echo ------------------------------------------------- >> %installLog%
+  
   echo Putting DSI Toolkit files here: %DSIRoot% >> %installLog%
   mkdir "%DSIRoot%\" 2>nul
     
@@ -75,18 +88,26 @@ rem ----------------------------------------------------------------------------
   rem We copy all the DSI Revit Addin DLLs to the DSIRoot
   set instdir=%DSIRoot%\%1
 
-  rem If we are DEV=1, then we don't copy the DLLs over to anyplace (we run them in place)
+  rem If we are DEV=1, then we don't copy the DLLs over to any place (we run them in place)
   if (%DEV%)==(1) echo Running Developer Mode
   if (%DEV%)==(1) echo Running Developer Mode >> %installLog%
   if (%DEV%)==(1) goto :make_manifest
 
+  echo ------------------- %1 ------------------ >> %installLog%
   echo Installing DSI Revit Toolkit for Revit %1
   echo Installing DSI Revit Toolkit for Revit %1 >> %installLog%
 
   rem Copy Files  
-  mkdir "%instdir%\" 2>nul  
-  xcopy .\%ZipTop%\%1\*.* "%instdir%\" /s /q /y 1>nul 2>nul
+  mkdir "%instdir%\" 1>nul 2>nul  
+  echo  xcopy "%UnzipPath%\%ZipTop%\%1\*.*" "%instdir%\" /s /q /y 
+  echo  xcopy "%UnzipPath%\%ZipTop%\%1\*.*" "%instdir%\" /s /q /y >> %installLog%
+  xcopy "%UnzipPath%\%ZipTop%\%1\*.*" "%instdir%\" /s /q /y >> %installLog%
 
+  if not exist "%instdir%\%WHAT%\DSIRevitToolkit.dll" echo Cannot find "%instdir%\%WHAT%\DSIRevitToolkit.dll" >> %installLog%
+  if not exist "%instdir%\%WHAT%\DSIRevitToolkit.dll" echo Cannot find "%instdir%\%WHAT%\DSIRevitToolkit.dll"
+  if not exist "%instdir%\%WHAT%\DSIRevitToolkit.dll" echo xcopy "%UnzipPath%\%ZipTop%\%1\*.*" "%instdir%\" /s /q /y Failed
+  rem if not exist "%instdir%\%WHAT%\DSIRevitToolkit.dll" if "%USERNAME%"=="xxxxxxxxxxxxxxxxxxxx" pause
+  
   rem Depricated: Cleanup old manifests (probably not needed here, but just in case)
   del "C:\ProgramData\Autodesk\Revit\Addins\%1\DSIToolKit - %1.addin" 1>nul 2>nul
   del "C:\ProgramData\Autodesk\Revit\Addins\%1\DSIToolKit - Debug %1.addin" 1>nul 2>nul

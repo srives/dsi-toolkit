@@ -118,6 +118,9 @@ echo Signing all relevant EXE files
 call sign.cmd
 
 echo Create staging area at c:\%ZipTop%\ where we will build our ZIP and EXE
+echo Erase previous version of the staged files
+rd "c:\%ZipTop%\%ZipTop%\" /s /q 1>nul 2>nul
+
 mkdir "c:\%ZipTop%\%ZipTop%\" 2>nul
 mkdir "c:\%ZipTop%\%ZipTop%\2018" 2>nul
 mkdir "c:\%ZipTop%\%ZipTop%\2019" 2>nul
@@ -126,14 +129,6 @@ mkdir "c:\%ZipTop%\%ZipTop%\2021" 2>nul
 mkdir "c:\%ZipTop%\%ZipTop%\2022" 2>nul
 mkdir "c:\%ZipTop%\%ZipTop%\2023" 2>nul
 
-echo Erase previous version of the staged files
-del "c:\%ZipTop%\%ZipTop%\*.*" /s /q 1>nul 2>nul
-del "c:\%ZipTop%\%ZipTop%\2018" /s /q 1>nul 2>nul
-del "c:\%ZipTop%\%ZipTop%\2019" /s /q 1>nul 2>nul
-del "c:\%ZipTop%\%ZipTop%\2020" /s /q 1>nul 2>nul
-del "c:\%ZipTop%\%ZipTop%\2021" /s /q 1>nul 2>nul
-del "c:\%ZipTop%\%ZipTop%\2022" /s /q 1>nul 2>nul
-del "c:\%ZipTop%\%ZipTop%\2023" /s /q 1>nul 2>nul
 
 
 rem -------------------------------------------------------------------
@@ -217,6 +212,7 @@ echo Warning: this replaces your manifests files
 echo          Run install.bat -dev to reset your manifests for dev testing
 "c:\%ZipTop%\%ZipTop%"
 echo          Ran the latestet instance of the DSI toolkit installer.
+echo          Check Install log here: %LOCALAPPDATA%\dsi-revit-toolkit\install.txt
 
 rem -------------------------------------------------------------------
 :FINAL_NOTE

@@ -28,9 +28,11 @@ rem -------------------------------------------------------------------
   
 :ready
 
-  if exist "..\src\bin\" echo Delete Build files (if you want them back, just run build.cmd)
-  if exist "..\src\bin\" del "..\src\bin\*.*" 1>nul 2>nul /s /q
-  if exist "..\src\bin\" echo.
+  echo Delete Build files (if you want them back, just run build.cmd)
+  rd "..\src\bin\" /s /q 1>nul 2>nul
+  rd "..\src\obj\" /s /q 1>nul 2>nul
+  echo Delete Staging files (if you want them back, just run CreateInstall.cmd)
+  rd "c:\%ZipTop%\%ZipTop%\" /s /q 1>nul 2>nul
   
   echo Autodesk Revit Addin Location: %adpath%
   
@@ -48,12 +50,9 @@ rem -------------------------------------------------------------------
     echo.
     set instdir=%DSIRoot%\%1
 
-    if exist "%instdir%\" echo Delete installed binaries for %1 (%instdir%\)
-	if exist "%instdir%\" del %instdir%\*.* /s /q 1>nul 2>nul
+    if exist "%instdir%\" echo Delete installed binaries for %1 (%instdir%\)	
+	rd "%instdir%\" /s /q 1>nul 2>nul
 	
-    echo Delete Staging files for %1 (c:\%ZipTop%\%ZipTop%\%1\%WHAT%\)
-    del "c:\%ZipTop%\%ZipTop%\%1\%WHAT%\*.*" /s /q 1>nul 2>nul
-
 	echo Delete installed binaries for %1 DEBUG (%instdir%\)
 	
 	set manifest=%adpath%\%1\DSIRevitToolkit%1.addin
