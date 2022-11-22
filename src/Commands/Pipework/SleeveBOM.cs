@@ -15,6 +15,8 @@ namespace DSI.Commands.Pipework
     [Transaction(TransactionMode.Manual)]
     class SleeveBOM : Command
     {
+        string NewFileName { get; set; } = "CSV_BOM_Revit_Sleves";
+        string ExcelTemplateFile { get; set; } = "CSV_BOM_Revit_Sleeves.xlsm";
         string ExcelRoot { 
             get 
             {
@@ -47,9 +49,16 @@ namespace DSI.Commands.Pipework
                 throw new ArgumentNullException(paramName: nameof(commandData));
             }
 
-            if (csv == false && !Directory.Exists(ExcelRoot))
+            if (csv==false)
             {
-                MessageBox.Show("Could not find " + ExcelRoot, "Missing Excel Templates");
+                if (!Directory.Exists(ExcelRoot))
+                {
+                    MessageBox.Show($"Could not find path {ExcelRoot}.", $"{ExcelTemplateFile} Path Missing");
+                }
+                else if (!File.Exists(ExcelRoot + ExcelTemplateFile))
+                {
+                    MessageBox.Show($"Could not find template file {ExcelRoot}{ExcelTemplateFile}.", $"Missing Template {ExcelTemplateFile}");
+                }
             }
             
             var data = new List<Sleeve>();
@@ -87,26 +96,25 @@ namespace DSI.Commands.Pipework
                     if (!csv)
                     {
                         var ew = new ExcelWriter(
-                            templatePath: $"{ExcelRoot}CSV_BOM_Revit_Sleeves.xlsm",
-                            defaultFileName: @"CSV_BOM_Revit_Sleves",
+                            templatePath: $"{ExcelRoot}{ExcelTemplateFile}",
+                            defaultFileName: $"{NewFileName}",
                             commandLog: log);
                         ExportData(
                             ew, data,
                             worksheetWriteRow: 3,
                             worksheetIndex: 1);
-                        ew.Close(csv);
+                        ew.Close();
                     }
                     else
                     {
                         var ew = new ExcelWriter(
                             columnHeaders: new string[,] { { "Size", "Description", "QTY", "Length" } },
-                            //templatePath: @"\\budacad\cad\Office_Templates\Excel\CSV_BOM_Revit_Sleeves.xlsm", 
-                            defaultFileName: @"CSV_BOM_Revit_Sleves",
+                            defaultFileName: $"{NewFileName}.csv",
                             commandLog: log);
                         ExportDataCSV(
                             ew, data,
                             worksheetWriteRow: 3);
-                        ew.Close(csv);
+                        ew.Close();
                     }
                 }
             }

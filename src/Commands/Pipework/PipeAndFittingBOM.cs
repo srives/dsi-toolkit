@@ -14,6 +14,8 @@ namespace DSI.Commands.Pipework
     [Transaction(TransactionMode.Manual)]
     public class PipeAndFittingBOM : Command
     {
+        string NewFileName { get; set; } = "CSV_BOM_REVIT_By_Service";
+        string ExcelTemplateFile { get; set; } = "CSV_BOM_REVIT_By_Service.xlsm";
         string ExcelRoot
         {
             get
@@ -55,9 +57,16 @@ namespace DSI.Commands.Pipework
                 throw new ArgumentNullException(paramName: nameof(commandData));
             }
 
-            if (csv == false && !Directory.Exists(ExcelRoot))
+            if (csv == false)
             {
-                MessageBox.Show("Could not find " + ExcelRoot, "Missing Excel Templates");
+                if (!Directory.Exists(ExcelRoot))
+                {
+                    MessageBox.Show($"Could not find path {ExcelRoot}.", $"{ExcelTemplateFile} Path Missing");
+                }
+                else if (!File.Exists(ExcelRoot + ExcelTemplateFile))
+                {
+                    MessageBox.Show($"Could not find template file {ExcelRoot}{ExcelTemplateFile}.", $"Missing Template {ExcelTemplateFile}");
+                }
             }
 
             var fittings        = new List<Element>();
@@ -92,8 +101,8 @@ namespace DSI.Commands.Pipework
                     if (!csv)
                     {
                         var ew = new ExcelWriter(
-                            templatePath: $"{ExcelRoot}CSV_BOM_REVIT_By_Service.xlsm",
-                            defaultFileName: @"CSV_BOM_REVIT_By_Service",
+                            templatePath: $"{ExcelRoot}{ExcelTemplateFile}",
+                            defaultFileName: $"{NewFileName}",
                             commandLog: log);
                         ExportData(
                             ew, pipeworkData,
@@ -106,21 +115,21 @@ namespace DSI.Commands.Pipework
                             worksheetWriteRow: 2,
                             worksheetIndex: 3);
 
-                        ew.Close(csv);
+                        ew.Close();
                     }
                     else
                     {
 
                         var ew = new ExcelWriter(
                             columnHeaders: new string[,] { { "System", "SIZE", "Description", "Class", "Material", "Type", "QTY", "LENGTH (ft)" } },
-                            defaultFileName: @"CSV_BOM_REVIT_By_Service.csv",
+                            defaultFileName: $"{NewFileName}.csv",
                             commandLog: log);
                         ExportDataCSV(
                             ew, pipeworkData);
                         ExportDataCSV(
                             ew, fittingData);
 
-                        ew.Close(csv);
+                        ew.Close();
                     }
                 }
             }
@@ -254,7 +263,7 @@ namespace DSI.Commands.Pipework
         private static void ExportDataCSV(
             ExcelWriter ew, 
             List<PipeOrFitting> data)
-        {
+        {            
             string[,] firstRegion = new string[data.Count, 8];
             for (int r = 0; r < data.Count; r++)
             {

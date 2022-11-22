@@ -10,6 +10,7 @@ using System.Reflection;
 using System.Windows.Documents;
 using System.Linq;
 using System.CodeDom;
+using System.Windows;
 
 namespace DSI.Core
 {
@@ -48,11 +49,13 @@ namespace DSI.Core
             }
             catch (ArgumentNullException e)
             {
+                MessageBox.Show($"{e.ParamName} was passed as a null value", "DSI ToolKit Error");
                 log.Logger.Debug(e, $"{e.ParamName} was passed as a null value - command did not execute");
                 return Result.Failed;
             }
             catch (Exception e)
             {
+                MessageBox.Show(e.Message, "DSI ToolKit Error");
                 log.Logger.Debug(e, "an exception occured");
                 return Result.Failed;
             }

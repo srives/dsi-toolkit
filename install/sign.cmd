@@ -1,4 +1,9 @@
 @echo off
+
+set signFile=C:\repos\Stratus\Certificates\GTPServices.pfx
+rem We need a password for the cert. We get it from this sign_pw.cmd, but however you get it, set pw=password
+set pwFile=C:\repos\secrets\sign_pw.cmd
+
 rem -------------------------------------------------------
 rem   Sign the DLLs built for DSI Toolkit
 rem   This is not essential, but signed files are easier
@@ -10,9 +15,7 @@ rem     GTP Services
 rem
 rem -------------------------------------------------------
 
-rem We need a password for the cert. We get it from this sign_pw.cmd, but however you get it, set pw=password
-set pwFile=C:\repos\secrets\sign_pw.cmd
-set signFile=C:\repos\Stratus\Certificates\GTPServices.pfx
+
 if not exist "%signFile%" set signFile=C:\repos\Stratus\Certificates\GTPServices,LLC.pfx
 set signTool=C:\Program Files (x86)\Windows Kits\10\App Certification Kit\signtool.exe
 

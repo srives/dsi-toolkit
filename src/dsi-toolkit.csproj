@@ -330,7 +330,6 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-	
     <Reference Include="RevitAddInUtility" Condition="'$(Configuration)'=='Debug %28Revit 2018%29' OR '$(Configuration)'=='Release %28Revit 2018%29'">
       <HintPath>..\ExternalLibraries\Revit2018\RevitAddInUtility.dll</HintPath>
       <Private>False</Private>
@@ -355,7 +354,6 @@
       <HintPath>..\ExternalLibraries\Revit2023\RevitAddInUtility.dll</HintPath>
       <Private>False</Private>
     </Reference>
-	
     <Reference Include="RevitAPIBrowserUtils" Condition="'$(Configuration)'=='Debug %28Revit 2018%29' OR '$(Configuration)'=='Release %28Revit 2018%29'">
       <HintPath>..\ExternalLibraries\Revit2018\RevitAPIBrowserUtils.dll</HintPath>
       <Private>False</Private>
@@ -380,7 +378,6 @@
       <HintPath>..\ExternalLibraries\Revit2023\RevitAPIBrowserUtils.dll</HintPath>
       <Private>False</Private>
     </Reference>
-	
     <Reference Include="RevitAPIExtData" Condition="'$(Configuration)'=='Debug %28Revit 2022%29' OR '$(Configuration)'=='Release %28Revit 2022%29'">
       <HintPath>..\ExternalLibraries\Revit2022\RevitAPIExtData.dll</HintPath>
       <Private>False</Private>
@@ -389,7 +386,6 @@
       <HintPath>..\ExternalLibraries\Revit2023\RevitAPIExtData.dll</HintPath>
       <Private>False</Private>
     </Reference>
-	
     <Reference Include="RevitAPIFoundation" Condition="'$(Configuration)'=='Debug %28Revit 2018%29' OR '$(Configuration)'=='Release %28Revit 2018%29'">
       <HintPath>..\ExternalLibraries\Revit2018\RevitAPIFoundation.dll</HintPath>
       <Private>False</Private>
@@ -414,7 +410,6 @@
       <HintPath>..\ExternalLibraries\Revit2023\RevitAPIFoundation.dll</HintPath>
       <Private>False</Private>
     </Reference>
-	
     <Reference Include="RevitAPIIFC" Condition="'$(Configuration)'=='Debug %28Revit 2018%29' OR '$(Configuration)'=='Release %28Revit 2018%29'">
       <HintPath>..\ExternalLibraries\Revit2018\RevitAPIIFC.dll</HintPath>
       <Private>False</Private>
@@ -439,7 +434,6 @@
       <HintPath>..\ExternalLibraries\Revit2023\RevitAPIIFC.dll</HintPath>
       <Private>False</Private>
     </Reference>
-
     <Reference Include="RevitAPI" Condition="'$(Configuration)'=='Debug %28Revit 2018%29' OR '$(Configuration)'=='Release %28Revit 2018%29'">
       <HintPath>..\ExternalLibraries\Revit2018\RevitAPI.dll</HintPath>
       <Private>False</Private>
@@ -464,7 +458,6 @@
       <HintPath>..\ExternalLibraries\Revit2023\RevitAPI.dll</HintPath>
       <Private>False</Private>
     </Reference>
-
     <Reference Include="RevitAPIUI" Condition="'$(Configuration)'=='Debug %28Revit 2018%29' OR '$(Configuration)'=='Release %28Revit 2018%29'">
       <HintPath>..\ExternalLibraries\Revit2018\RevitAPIUI.dll</HintPath>
       <Private>False</Private>
@@ -489,7 +482,6 @@
       <HintPath>..\ExternalLibraries\Revit2023\RevitAPIUI.dll</HintPath>
       <Private>False</Private>
     </Reference>
-
     <Reference Include="RevitUIAPI" Condition="'$(Configuration)'=='Debug %28Revit 2018%29' OR '$(Configuration)'=='Release %28Revit 2018%29'">
       <HintPath>..\ExternalLibraries\Revit2018\RevitUIAPI.dll</HintPath>
       <Private>False</Private>
@@ -514,7 +506,6 @@
       <HintPath>..\ExternalLibraries\Revit2023\RevitUIAPI.dll</HintPath>
       <Private>False</Private>
     </Reference>
-	
     <Reference Include="Serilog, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
       <HintPath>..\packages\Serilog.2.9.0\lib\net46\Serilog.dll</HintPath>
     </Reference>
@@ -579,7 +570,6 @@
     <Compile Include="Filters\PipeworkSelectionFilter.cs" />
     <Compile Include="Filters\HangerSelectionFilter.cs" />
     <Compile Include="Commands\Hanger\HangerBOM.cs" />
-    <Compile Include="Commands\Helpers\ExcelWriter.cs" />
     <Compile Include="Commands\Helpers\CommandHelper.cs" />
     <Compile Include="Commands\General\SetCIDAndServiceType.cs" />
     <Compile Include="Core\ApplicationConfiguration.cs" />

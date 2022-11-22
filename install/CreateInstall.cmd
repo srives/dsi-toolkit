@@ -1,4 +1,5 @@
 @echo off
+
 rem -------------------------------------------------------------------
 rem     This batch script will take your source code 
 rem     delete the build, and rebuild it. It will then
@@ -32,12 +33,12 @@ rem
 rem -------------------------------------------------------------------
 
 :ENV_VARS
-    rem Change these if you move the directory where this code lives
-    rem Source Path is the place under which there is the dsi-toolkit.sln file:
-	set SOURCEPATH=C:\repos\DSI\revit-toolkit
-	set SOURCE_ZIP=C:\repos\DSI\dsi-revit-toolkit-source.zip
+    cd..	
+	set SOURCEPATH=%cd%
+	cd install
 	set Text=%SOURCEPATH%\install\Install.message.txt
 	set About=%SOURCEPATH%\install\Install.message.txt
+	set Template=%SOURCEPATH%\install\InstallTitle.txt
 
     rem We will STAGE the files for the installer to here:
 	set ZipTop=DSIRevitToolkit
@@ -46,12 +47,11 @@ rem -------------------------------------------------------------------
 
     rem We use a tool that turns a ZIP into an EXE (it is installed here):
 	set WZIP=C:\Program Files (x86)\WinZip Self-Extractor\WZIPSE32.EXE
-	
-	rem If you have a signing cert, point to it here (if not, don't worry about it):
-	set pwFile=C:\repos\secrets\sign_pw.cmd
 	set signTool=C:\Program Files (x86)\Windows Kits\10\App Certification Kit\signtool.exe
-	set signFile=C:\repos\Stratus\Certificates\GTPServices.pfx
 	if not exist "%signFile%" set signFile=C:\repos\Stratus\Certificates\GTPServices,LLC.pfx
+
+    rem TODAY=Year-Month-Day
+    for /F "tokens=1-5 delims=/ " %%i in ('date /t') do set TODAY=%%l-%%j-%%k
 
 rem -------------------------------------------------------------------
 :COMMAND_LINE_OPTIONS
@@ -71,20 +71,24 @@ rem -------------------------------------------------------------------
 
 rem -------------------------------------------------------------------
 :CLEAN
-echo CLEAN bin directory "%SOURCEPATH%\src\bin\"
+echo CLEAN bin directory, "%SOURCEPATH%\src\bin\", and obj directory, "%SOURCEPATH%\src\obj\" 
 rd /s /q "%SOURCEPATH%\src\bin\" 1>nul 2>nul
 rd /s /q "%SOURCEPATH%\src\obj\" 1>nul 2>nul
 
 rem -------------------------------------------------------------------
 :ZIPSOURCE
-if (%ZIP_SOURCE%)==(0) goto :BUILD
+if (%ZIP_SOURCE%)==(0) goto :BUILD_AND_SIGN
+
+set SOURCE_ZIP=%SOURCEPATH%-source-%TODAY%.zip
+rem E.g., SOURCE_ZIP=C:\repos\DSI\revit-toolkit-source-2022-11-14
+
 echo Creating Source CODE Zip at %SOURCE_ZIP%
 del "%SOURCE_ZIP%" 1>nul 2>nul
 if exist "%SOURCE_ZIP%" echo You have %SOURCE_ZIP% open. Close it.
 powershell Compress-Archive "%SOURCEPATH%" -DestinationPath "%SOURCE_ZIP%"
 
 rem -------------------------------------------------------------------
-:BUILD
+:BUILD_AND_SIGN
 echo Building DSI Revit Toolkit
 echo Creating %WHAT% version of the installer (pass in -D to this script to create the DEBUG version)
 call .\build.cmd %WHAT%
@@ -98,7 +102,10 @@ call .\build.cmd %WHAT%
   
   if (%found%)==(0) echo No files found to create install package. Missing DLL DSIRevitToolkit.dll for all versions of Revit
   if (%found%)==(0) goto :EOF  
-goto :READY
+
+  echo Signing all relevant DLL files (not necessary for the installer, optional)
+  call sign.cmd
+goto :CREATE_STAGE
 
 rem -------------------------------------------------------------------
 rem -- Subroutine to CHECK to make sure we have something to install --
@@ -111,12 +118,9 @@ rem -------------------------------------------------------------------
 
 
 rem -------------------------------------------------------------------
-:READY
-echo Ready to create DSI Revit Install at c:\%ZipTop%\
-c:
-echo Signing all relevant EXE files
-call sign.cmd
 
+
+:CREATE_STAGE
 echo Create staging area at c:\%ZipTop%\ where we will build our ZIP and EXE
 echo Erase previous version of the staged files
 rd "c:\%ZipTop%\%ZipTop%\" /s /q 1>nul 2>nul
@@ -129,7 +133,7 @@ mkdir "c:\%ZipTop%\%ZipTop%\2021" 2>nul
 mkdir "c:\%ZipTop%\%ZipTop%\2022" 2>nul
 mkdir "c:\%ZipTop%\%ZipTop%\2023" 2>nul
 
-
+echo Ready to create DSI Revit Install at c:\%ZipTop%\
 
 rem -------------------------------------------------------------------
 :STAGE
@@ -179,6 +183,9 @@ if not exist "%WZIP%" echo Cannot create self-extracting EXE (missing %WZIP%)
 if not exist "%WZIP%" echo Your install package is in a ZIP called, c:\%ZipTop%\%ZipTop%.zip
 if not exist "%WZIP%" echo To install, unzip that file and run install.bat
 if not exist "%WZIP%" goto :EOF
+
+type %Template% > %Text%
+echo Version: %TODAY% >> %Text%
 
 echo Running WinZip Self Extraction Creation tool (consider getting licensed version to avoid unwanted annoy messages)
 "%WZIP%" %ZipFile% -auto -setup -t %Text% -a %About% -c .\%ZipTop%\install.bat

@@ -15,6 +15,8 @@ namespace DSI.Commands.Hanger
     [Transaction(TransactionMode.Manual)]
     public class HangerBOM : Command
     {
+        string NewFileName { get; set; } = "CSV_BOM_Revit_Hanger";
+        string ExcelTemplateFile { get; set; } = "CSV_BOM_Revit_Hanger.xlsm";
         string ExcelRoot
         {
             get
@@ -61,9 +63,16 @@ namespace DSI.Commands.Hanger
                 throw new ArgumentNullException(paramName: nameof(commandData));
             }
 
-            if (csv == false && !Directory.Exists(ExcelRoot))
+            if (csv == false)
             {
-                MessageBox.Show("Could not find " + ExcelRoot, "Missing Excel Templates");
+                if (!Directory.Exists(ExcelRoot))
+                {
+                    MessageBox.Show($"Could not find path {ExcelRoot}.", $"{ExcelTemplateFile} Path Missing");
+                }
+                else if (!File.Exists(ExcelRoot + ExcelTemplateFile))
+                {
+                    MessageBox.Show($"Could not find template file {ExcelRoot}{ExcelTemplateFile}.", $"Missing Template {ExcelTemplateFile}");
+                }
             }
 
             using (var filteredElements = GetUserSelectedElementsByFilter(commandData.Application, new HangerSelectionFilter()))
@@ -113,29 +122,28 @@ namespace DSI.Commands.Hanger
                     if (!csv)
                     {
                         var ew = new ExcelWriter(
-                             templatePath: $"{ExcelRoot}CSV_BOM_Revit_Hanger.xlsm",
-                             defaultFileName: @"CSV_BOM_Revit_Hanger",
+                             templatePath: $"{ExcelRoot}{ExcelTemplateFile}",
+                             defaultFileName: $"{NewFileName}",
                              commandLog: log);
 
                         ExportData(
                             ew, hangers,
                             worksheetWriteRow: 5,
                             worksheetIndex: 1);
-                        ew.Close(csv);
+                        ew.Close();
                     }
                     else
                     {
                         // CSV version
                         var ew = new ExcelWriter(
                             columnHeaders: new string[,] { { "ASSY TYPE", "QTY", "HANGER SIZE", "ROD SIZE", "CUT LENGTH ROD A", "CUT LENGTH ROD B", "TAG NUMBER", "SERVICE ABBR.", "BOP", "System", "BOP" } },
-                            //templatePath: @"\\budacad\C\Office_Templates\Excel\CSV_BOM_Revit_Hanger.xlsm",
-                            defaultFileName: @"CSV_BOM_Revit_Hanger.csv",
+                            defaultFileName: $"{NewFileName}.csv",
                             commandLog: log);
 
                         ExportData(
                             ew, hangers);
 
-                        ew.Close(csv);
+                        ew.Close();
                     }
                 }
             }
