@@ -4,15 +4,21 @@ DSI Revit Toolkit
 This readme.txt will tell you how to build and release this software.
 
 Release Notes:
-  
-    21 Nov 2022     * Create new install scripts/installer (instructions on usage below)
-					* Installer installs Revit 2018, 2019, 2020, 2021, 2022, and 2023
-					  (2019 and 2023 are new)
-	                * Allow for straight excel and csv files (user choice) from dropdown
-					* When creating CSV, take care of quotes in fields, and commas in fields
-					* Add Sleeve Update button 
-					* Remove TigerStop button
-					* Short user manual (this file)	                
+
+22 Nov 21  
+* Create new install scripts/installer (instructions on usage below)
+* Installer installs Revit 2018, 2019, 2020, 2021, 2022, and 2023
+  (2019 and 2023 are new)
+* Allow for straight excel and csv files (user choice) from dropdown
+* When creating CSV, take care of quotes in fields, and commas in fields
+* Add Sleeve Update button 
+* Remove TigerStop button
+* Short user manual (this file)	
+
+1 Dec 2022
+ * Change target path of install to Program Files (x86)\DSI\
+ * Correct Sleeve Update logic 
+ * Add more messages to Sleeve Update logic
 
 
 GTP Sevices, 2022

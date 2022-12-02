@@ -91,7 +91,7 @@ rem -------------------------------------------------------------------
 :BUILD_AND_SIGN
 echo Building DSI Revit Toolkit
 echo Creating %WHAT% version of the installer (pass in -D to this script to create the DEBUG version)
-call .\build.cmd %WHAT%
+call .\build.cmd
   set found=0
   call :CHECK 2018
   call :CHECK 2019

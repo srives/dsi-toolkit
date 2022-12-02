@@ -4,6 +4,10 @@ rem  GTP STRATUS 2022 build script for DSI Revit ToolKit
 rem  Builds x64.
 rem         If you want to build ARM64, I don't think Revit supports that. 
 rem
+rem  Usage:
+rem           build 2023
+rem         Builds the Revit 2023 version of the DSI addin
+rem
 rem  8 Nov 2022
 rem  Steve.Rives@gogtp.com
 rem  GTP Services
@@ -22,12 +26,17 @@ if not exist "%MSBUILD%" goto :EOF
 
     echo Building DSI Revit Toolkit with Visual Studio version %VSVER%
     cd ..
+	if not (%1)==() call :Build %1
+	if not (%1)==() goto :DONE
+
 	call :Build 2018
 	call :Build 2019
 	call :Build 2020
 	call :Build 2021
 	call :Build 2022
 	call :Build 2023
+	
+	:DONE
 	cd install
 	
 goto :EOF

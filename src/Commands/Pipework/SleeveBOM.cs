@@ -69,7 +69,7 @@ namespace DSI.Commands.Pipework
                 {
                     foreach (Element elem in filteredElements)
                     {
-                        var fi = elem as FamilyInstance;
+                        var fi = elem as FamilyInstance; // unsafe
 
                         if (fi.Symbol.FamilyName == "DSI Round Floor Sleeve"  // Round
                             || fi.Symbol.FamilyName == "DSI Round Wall Sleeve"

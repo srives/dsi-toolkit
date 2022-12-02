@@ -46,13 +46,13 @@ goto :EOF
 rem ----------------------------------------------------------------------------------------------
 :sign_it
 rem SIGN Debug EXE 
-if not exist "%SOURCEPATH%\src\bin\%1\Debug\DSIRevitToolkit.dll" goto :RELEASE
+if not exist "%SOURCEPATH%\src\bin\x64\Debug (Revit %1)\DSIRevitToolkit.dll" goto :RELEASE
 echo SIGN Debug DLL for %1
-"%signTool%" sign /td SHA256 /fd SHA256 /f %signFile% /p %pw% /tr http://timestamp.digicert.com/ "%SOURCEPATH%\src\bin\%1\Debug\DSIRevitToolkit.dll"
+"%signTool%" sign /td SHA256 /fd SHA256 /f %signFile% /p %pw% /tr http://timestamp.digicert.com/ "%SOURCEPATH%\src\bin\x64\Debug (Revit %1)\DSIRevitToolkit.dll"
 
 :RELEASE
-if not exist "%SOURCEPATH%\src\bin\%1\Release\DSIRevitToolkit.dll" goto :EOF
+if not exist "%SOURCEPATH%\src\bin\x64\Release (Revit %1)\DSIRevitToolkit.dll" goto :EOF
 echo SIGN Release DLL for %1
-"%signTool%" sign /td SHA256 /fd SHA256 /f %signFile% /p %pw% /tr http://timestamp.digicert.com/ "%SOURCEPATH%\src\bin\%1\Release\DSIRevitToolkit.dll"
+"%signTool%" sign /td SHA256 /fd SHA256 /f %signFile% /p %pw% /tr http://timestamp.digicert.com/ "%SOURCEPATH%\src\bin\x64\Release (Revit %1)\DSIRevitToolkit.dll"
 
 goto :EOF
