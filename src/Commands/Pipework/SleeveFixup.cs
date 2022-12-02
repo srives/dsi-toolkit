@@ -59,17 +59,17 @@ namespace DSI.Commands.Pipework
             return Result.Succeeded;
         }
 
-        private (string, bool) ReturnMessage(string what, int changedValues, int selectedElementCount, List<ElementId> elements)
+        private (string, bool) ReturnMessage(string what, int changedValues, int selectedElementCount, List<ElementId> badElements)
         {
             string message = string.Empty;
             bool success = false;
             if (changedValues > 0)
             {
-                message = $"{what}: Updated {changedValues} out of {selectedElementCount} selected elements";
+                message = $"{what}: Updated {changedValues} items ({selectedElementCount} selected items)";
                 success = true;
-                if (elements.Count > 0)
+                if (badElements.Count > 0)
                 {
-                    message += $"; {elements.Count} items were missing Point in their element Id";
+                    message += $"; {badElements.Count} failed elements";
                 }
             }
             else if (selectedElementCount == 0)
@@ -77,10 +77,10 @@ namespace DSI.Commands.Pipework
                 success = true;
                 message = $"{what}: No selected values.";
             }
-            else if (elements.Count > 0)
+            else if (badElements.Count > 0)
             {
                 success = false;
-                message = $"{what}: No changes; {elements.Count} elements w/o 'Point' in name.";
+                message = $"{what}: No changes; {badElements.Count} failed elements.";
             }
             return (message, success);
         }
