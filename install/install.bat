@@ -20,32 +20,44 @@ rem  Steve.Rives@gogtp.com
 rem  GTP Services
 rem
 rem ----------------------------------------------------------------------------------------------
-  
-  set UnzipPath=%cd%
-  echo Current Directory = %cd%
-  set ZipTop=DSIRevitToolkit
+
+  rem we cannot use %cd% as it is used in the installer packages, like PDQ, and gets destroyed
+  set cwd=
+  for /F %%a in ('dir install.bat /b /s') do if ("%cwd%")==("") set cwd=%%~dpa
+  cd "%cwd%"
+ 
+  set UnzipPath=%cwd%
+  echo Current Directory = %cwd%
   set DSIRoot=%ProgramFiles%\DSI\dsi-revit-toolkit
   set WHAT=Release
   set DEV=0
   if /I (%1)==(-dev) set DSIRoot=C:\repos\DSI\revit-toolkit\src\bin\x64
   if /I (%1)==(-dev) set DEV=1
   if /I (%1)==(-dev) set WHAT=Debug
+  
+  mkdir "%DSIRoot%" 1>nul 2>nul
   set installLog=%DSIRoot%\install.txt
-
   echo. >> "%installLog%"  
   echo. >> "%installLog%"
   echo ------------------------------------------------- >> "%installLog%"
   echo Running DSI Revit Toolkit Installer >> "%installLog%"
   date /T >> "%installLog%"
   time /T >> "%installLog%"
+  
+  echo ------------------------------------------------- >> "%installLog%"
+  set >> "%installLog%"
+  echo ------------------------------------------------- >> "%installLog%"
+  echo Current Directroy >> "%installLog%"
+  echo %cwd%  >> "%installLog%"
+  tree /A /F >> "%installLog%"
+  echo ------------------------------------------------- >> "%installLog%"
 
   echo Installer Contents: >> "%installLog%"
   echo ------------------------------------------------- >> "%installLog%"
   dir "%UnzipPath%" /s /b >> "%installLog%"
   echo ------------------------------------------------- >> "%installLog%"
-  
+
   echo Putting DSI Toolkit files here: %DSIRoot% >> "%installLog%"
-  mkdir "%DSIRoot%\" 2>nul
     
   rem Determine Autodesk Path, it can be one of three places  
   set adpath=C:\ProgramData\Autodesk\Revit\Addins\
@@ -61,7 +73,6 @@ rem ----------------------------------------------------------------------------
   echo ERROR: Could not find Autodesk path: %adpath%, we will just use the most common one
   echo ERROR: Could not find Autodesk path: %adpath%, we will just use the most common one >> "%installLog%"
 
-  
 :ready
 
   echo Autodesk Revit Addin Location: %adpath%
@@ -74,8 +85,10 @@ rem ----------------------------------------------------------------------------
   call :RevitYear 2022
   call :RevitYear 2023
 
+  echo ------------------------------------------------ >> "%installLog%"
   echo DSI Revit Toolkit Install finished >> "%installLog%"
   echo Finished. Check install log: %installLog%  
+  echo.  >> "%installLog%"
   
 goto :EOF
 
@@ -101,13 +114,13 @@ rem ----------------------------------------------------------------------------
 
   rem Copy Files  
   mkdir "%instdir%\" 1>nul 2>nul  
-  echo  xcopy "%UnzipPath%\%ZipTop%\%1\*.*" "%instdir%\" /s /q /y 
-  echo  xcopy "%UnzipPath%\%ZipTop%\%1\*.*" "%instdir%\" /s /q /y >> "%installLog%"
-  xcopy "%UnzipPath%\%ZipTop%\%1\*.*" "%instdir%\" /s /q /y >> "%installLog%"
+  echo  xcopy "%UnzipPath%%1\*.*" "%instdir%\" /s /q /y 
+  echo  xcopy "%UnzipPath%%1\*.*" "%instdir%\" /s /q /y >> "%installLog%"
+  xcopy "%UnzipPath%%1\*.*" "%instdir%\" /s /q /y >> "%installLog%"
 
   if not exist "%instdir%\%WHAT%\DSIRevitToolkit.dll" echo Cannot find "%instdir%\%WHAT%\DSIRevitToolkit.dll" >> "%installLog%"
   if not exist "%instdir%\%WHAT%\DSIRevitToolkit.dll" echo Cannot find "%instdir%\%WHAT%\DSIRevitToolkit.dll"
-  if not exist "%instdir%\%WHAT%\DSIRevitToolkit.dll" echo xcopy "%UnzipPath%\%ZipTop%\%1\*.*" "%instdir%\" /s /q /y Failed
+  if not exist "%instdir%\%WHAT%\DSIRevitToolkit.dll" echo xcopy "%UnzipPath%%ZipTop%\%1\*.*" "%instdir%\" /s /q /y Failed
   rem if not exist "%instdir%\%WHAT%\DSIRevitToolkit.dll" if "%USERNAME%"=="xxxxxxxxxxxxxxxxxxxx" pause
   
   rem Depricated: Cleanup old manifests (probably not needed here, but just in case)

@@ -129,37 +129,160 @@ namespace DSI.Commands.Pipework
         private string _errorMessage = string.Empty;
         private void StoreErrorMessage(string context, Exception e, FamilyInstance fam)
         {
-            _errorMessage += $"{Environment.NewLine}{context}: {e.Message}";
+            _errorMessage += $"{Environment.NewLine}ERROR {context}: {e.Message}";
             if (fam != null)
               _errorMessage += $" on Element {fam.Id}:{fam.Name}";
         }
-
-        private double GetDouble(FamilyInstance e, string parameter, double def = -999.999)
+        private void StoreWarningMessage(string context, FamilyInstance fam)
         {
-            var answer = def;
-            var p = e?.LookupParameter(parameter);
-            try
-            {
-                answer = (p?.HasValue == true) ? p.AsDouble() : def;
-            }
-            catch
-            {
-            }
-            return answer;
+            _errorMessage += $"{Environment.NewLine}WARNING {context}";
+            if (fam != null)
+                _errorMessage += $" on Element {fam.Id}:{fam.Name}";
         }
 
-        private string GetString(FamilyInstance e, string parameter, string def = "")
+        /// <returns>value, true if success, else false (in which case, value is def)</returns>
+        private (double, bool) GetDouble(FamilyInstance e, string parameter, double def = -999.999)
         {
+            bool success = false;
             var answer = def;
             var p = e?.LookupParameter(parameter);
             try
             {
-                answer = (p?.HasValue == true) ? p.AsValueString() : def;
+                success = p?.HasValue == true;
+                if (success)
+                {
+                    answer = p.AsDouble();
+                }
+                else
+                {
+                    StoreWarningMessage($"Getting Numeric Parameter {parameter}", e);
+                }
             }
-            catch
+            catch (Exception ex)
             {
+                StoreErrorMessage($"Getting Numeric Parameter {parameter}", ex, e);
+                success = false;
             }
-            return answer;
+            return (answer, success);
+        }
+
+        /// <summary>
+        /// Get the parameter value as a string
+        /// Also retruns false if error
+        /// </summary>
+        private (string, bool) GetString(FamilyInstance e, string parameter, string def = "")
+        {
+            bool success = false;
+            var answer = def;
+            var p = e?.LookupParameter(parameter); // e.g., "Point Main Number"
+            try
+            {
+                success = (p?.HasValue == true);
+                if (p == null)
+                {
+                    success = false;
+                    StoreWarningMessage($"Missing parameter. {parameter}", e);
+                }
+                else if (success)
+                {                    
+                    answer = p.AsString();
+                }
+                else
+                {
+                    StoreWarningMessage($"No VAL: {parameter}", e);
+                }
+            }
+            catch (Exception ex)
+            {
+                StoreErrorMessage($"Error getting {parameter}", ex, e);
+                success = false;
+            }
+            return (answer, success);
+        }
+
+        private bool SetDIAMxLEN(string paramName, FamilyInstance e)
+        {
+            Parameter p = e.LookupParameter(paramName);
+            var (diam, hasd) = GetDouble(e, "Sleeve_Nominal_Diameter", 1);
+            var (len, hasl) = GetDouble(e, "Sleeve_Length", 1);
+            string val;
+            if (hasd && hasl)
+            {
+                val = diam * 12 + "\" x " + len * 12 + "\"";
+                p.Set(val);
+            }
+            else
+            {
+                var warning = "Missing mults DxWxL. Element has ";
+                if (!hasd)
+                    warning += " No Diameter, ";
+                if (!hasl)
+                    warning += " No Length";
+                StoreWarningMessage(warning, e);
+
+                // ask Frank what we should do if we get here (should we save the value?)
+                val = diam * 12 + "\" x " + len * 12 + "\"";
+                p.Set(val);
+            }
+            return (hasd && hasl);
+        }
+
+        private bool SetDxWxL(string paramName, FamilyInstance e)
+        {
+            Parameter p = e.LookupParameter(paramName);
+            var (depth, hasd) = GetDouble(e, "Sleeve_Depth", 1);
+            var (width, hasw) = GetDouble(e, "Sleeve_Width", 1);
+            var (len, hasl) = GetDouble(e, "Sleeve_Length", 1);
+            string val;
+            if (hasd && hasw && hasl)
+            {
+                val = depth * 12 + "\"x" + width * 12 + "\"x" + len * 12 + "\"";
+                p.Set(val);
+            }
+            else
+            {
+                var warning = "Missing mults DxWxL. Element has ";
+                if (!hasd)
+                    warning += " No Depth, ";
+                if (!hasw)
+                    warning += " No Width, ";
+                if (!hasl)
+                    warning += " No Length";
+                StoreWarningMessage(warning, e);
+
+                // ask Frank what we should do if we get here (should we save the value?)
+                val = depth * 12 + "\"x" + width * 12 + "\"x" + len * 12 + "\"";
+                p.Set(val);
+            }
+            return (hasd && hasw && hasl);
+        }
+
+        private bool SetPrefix_XDash_MainNum(FamilyInstance e, string paramName, string dash)
+        {
+            Parameter p = e.LookupParameter(paramName);
+            var (pp, haspp) = GetString(e, "Point Prefix", "");
+            var (pm, haspm) = GetString(e, "Point Main Number", "");
+            string val;
+
+            if (haspp && haspm)
+            {
+                val = pp + $"{dash}{_dash}" + pm;
+                p.Set(val);
+            }
+            else
+            {
+                var warning = "Could not set Desc. Element has ";
+                if (!haspp)
+                    warning += " No Prefix, ";
+                if (!haspm)
+                    warning += " No Main Number.";
+                StoreWarningMessage(warning, e);
+
+                // ask Frank what we should do if we get here (should we save the value?)
+                val = pp + $"{dash}{_dash}" + pm;
+                p.Set(val);
+            }
+            return (haspp && haspm);
         }
 
         public (string, bool) RoundWall(UIDocument uidoc)
@@ -181,12 +304,9 @@ namespace DSI.Commands.Pipework
                 {
                     try
                     {
-                        Parameter pntdesc = e.LookupParameter("Point Description");
-                        Parameter pntnum1 = e.LookupParameter("Point Number 1");
-                        Parameter pntnum2 = e.LookupParameter("Point Number 2");
-                        pntdesc.Set(GetDouble(e, "Sleeve_Nominal_Diameter",1) * 12 + "\" x " + GetDouble(e, "Sleeve_Length", 1) * 12 + "\"");
-                        pntnum1.Set(GetString(e, "Point Prefix") + $"1{_dash}" + GetString(e, "Point Main Number"));
-                        pntnum2.Set(GetString(e, "Point Prefix") + $"2{_dash}" + GetString(e, "Point Main Number"));
+                        SetDIAMxLEN("Point Description", e);
+                        SetPrefix_XDash_MainNum(e, "Point Number 1", "1");
+                        SetPrefix_XDash_MainNum(e, "Point Number 2", "2");
                         changedValues++;
                     }
                     catch (Exception ex)
@@ -221,11 +341,8 @@ namespace DSI.Commands.Pipework
                 {
                     try
                     {
-                        Parameter pntdesc = e.LookupParameter("Point Description");
-                        Parameter pntnum = e.LookupParameter("Point Number");
-                        pntdesc.Set(GetDouble(e, "Sleeve_Nominal_Diameter", 1) * 12 + "\" x " + GetDouble(e, "Sleeve_Length", 1) * 12 + "\"");
-                        var val = GetString(e, "Point Prefix") + $"{_dash}" + GetString(e, "Point Main Number");
-                        pntnum.Set(val);
+                        SetDIAMxLEN("Point Description", e);
+                        SetPrefix_XDash_MainNum(e, "Point Number", "");
                         changedValues++;
                     }
                     catch (Exception ex)
@@ -261,29 +378,15 @@ namespace DSI.Commands.Pipework
                     try
                     {
                         var pfx = GetPrefix(e, doc);
-                        Parameter pntdesc = e.LookupParameter("Point Description");
-                        Parameter pntnum1 = e.LookupParameter("Point Number 1");
-                        Parameter pntnum2 = e.LookupParameter("Point Number 2");
-                        Parameter pntnum3 = e.LookupParameter("Point Number 3");
-                        Parameter pntnum4 = e.LookupParameter("Point Number 4");
-                        Parameter pntnum1a = e.LookupParameter("Point Number 1a");
-                        Parameter pntnum2a = e.LookupParameter("Point Number 2a");
-                        Parameter pntnum3a = e.LookupParameter("Point Number 3a");
-                        Parameter pntnum4a = e.LookupParameter("Point Number 4a");
-
-                        var val = GetDouble(e, "Sleeve Length", 1) * 12 + "\"x" + GetDouble(e, "Sleeve Width", 1) * 12 + "\"x" + GetDouble(e, "Sleeve Depth", 1) * 12 + "\"";
-                        pntdesc.Set(val);
-                        val = GetString(e, "Point Prefix") + $"1{_dash}" + GetString(e, "Point Main Number");
-                        pntnum1.Set(val);
-                        val = GetString(e, "Point Prefix") + $"2{_dash}" + GetString(e, "Point Main Number");
-                        pntnum2.Set(val);
-                        val = GetString(e, "Point Prefix") + $"3{_dash}" + GetString(e, "Point Main Number");
-                        pntnum3.Set(val);
-                        pntnum4.Set(GetString(e, "Point Prefix") + $"4{_dash}" + GetString(e, "Point Main Number"));
-                        pntnum1a.Set(GetString(e, "Point Prefix") + $"1a{_dash}" + GetString(e, "Point Main Number"));
-                        pntnum2a.Set(GetString(e, "Point Prefix") + $"2a{_dash}" + GetString(e, "Point Main Number"));
-                        pntnum3a.Set(GetString(e, "Point Prefix") + $"3a{_dash}" + GetString(e, "Point Main Number"));
-                        pntnum4a.Set(GetString(e, "Point Prefix") + $"4a{_dash}" + GetString(e, "Point Main Number"));
+                        SetDxWxL("Point Description", e);
+                        SetPrefix_XDash_MainNum(e, "Point Number 1", "1");
+                        SetPrefix_XDash_MainNum(e, "Point Number 2", "2");
+                        SetPrefix_XDash_MainNum(e, "Point Number 3", "3");
+                        SetPrefix_XDash_MainNum(e, "Point Number 4", "4");
+                        SetPrefix_XDash_MainNum(e, "Point Number 1a", "1a");
+                        SetPrefix_XDash_MainNum(e, "Point Number 2a", "2a");
+                        SetPrefix_XDash_MainNum(e, "Point Number 3a", "3a");
+                        SetPrefix_XDash_MainNum(e, "Point Number 4a", "4a");
                         changedValues++;
                     }
                     catch (Exception ex)
@@ -319,20 +422,11 @@ namespace DSI.Commands.Pipework
                     try
                     {
                         var pfx = GetPrefix(e, doc);
-                        Parameter pntdesc = e.LookupParameter("Point Description");
-                        Parameter pntnum1 = e.LookupParameter("Point Number 1");
-                        Parameter pntnum2 = e.LookupParameter("Point Number 2");
-                        Parameter pntnum3 = e.LookupParameter("Point Number 3");
-                        Parameter pntnum4 = e.LookupParameter("Point Number 4");
-
-                        pntdesc.Set(GetDouble(e,"Sleeve Length", 1) * 12 + "\"x" + GetDouble(e, "Sleeve Width",1) * 12 + "\"x" + GetDouble(e, "Sleeve Depth", 1) * 12 + "\"");
-                        pntnum1.Set(GetString(e, "Point Prefix") + $"1{_dash}" + GetString(e, "Point Main Number"));
-
-                        var val = GetString(e, "Point Prefix") + $"2{_dash}" + GetString(e, "Point Main Number");
-                        pntnum2.Set(val);
-
-                        pntnum3.Set(GetString(e, "Point Prefix") + $"3{_dash}" + GetString(e, "Point Main Number"));
-                        pntnum4.Set(GetString(e, "Point Prefix") + $"4{_dash}" + GetString(e, "Point Main Number"));
+                        SetDxWxL("Point Description", e);
+                        SetPrefix_XDash_MainNum(e, "Point Number 1", "1");
+                        SetPrefix_XDash_MainNum(e, "Point Number 2", "2");
+                        SetPrefix_XDash_MainNum(e, "Point Number 3", "3");
+                        SetPrefix_XDash_MainNum(e, "Point Number 4", "4");
                         changedValues++;
                     }
                     catch (Exception ex)

@@ -25,6 +25,27 @@ rem     -R:  To run the install after it is created
 rem             CreateInstall -R
 rem             Warning: this replaces your manifests files
 rem
+rem     -NO: Don't build. You'd do this if you are testing only
+rem          installer changes
+rem
+rem     2018:
+rem         Just build an installer for 2018 only
+rem
+rem     2019:
+rem         Just build an installer for 2019 only
+rem
+rem     2020:
+rem         Just build an installer for 2020 only
+rem
+rem     2021:
+rem         Just build an installer for 2021 only
+rem
+rem     2022:
+rem         Just build an installer for 2022 only
+rem
+rem     2023:
+rem         Just build an installer for 2023 only
+rem
 rem     Written for DSI, for their Revit Toolkit
 rem     8 Nov 2022
 rem     Steve.Rives@gogtp.com
@@ -59,6 +80,7 @@ rem -------------------------------------------------------------------
 	set ZIP_SOURCE=0
 	set RUN_INSTALL=0
 	set LOOP=0
+	set DOBUILD=1
 	:LOOP_TOP
       set /A LOOP=LOOP+1
 	  if /I (%1)==(-D) set WHAT=Debug
@@ -67,10 +89,15 @@ rem -------------------------------------------------------------------
 	  if /I (%1)==(-S) shift
 	  if /I (%1)==(-R) set RUN_INSTALL=1
 	  if /I (%1)==(-R) shift
+	  if /I (%1)==(-NO) set DOBUILD=0
+	  if /I (%1)==(-NO) shift
 	if not (%LOOP%) == (4) goto :LOOP_TOP
 
 rem -------------------------------------------------------------------
 :CLEAN
+if (%DOBUILD%)==(0) echo Not cleaning, because we are not building. 
+if (%DOBUILD%)==(0) goto :ZIPSOURCE
+
 echo CLEAN bin directory, "%SOURCEPATH%\src\bin\", and obj directory, "%SOURCEPATH%\src\obj\" 
 rd /s /q "%SOURCEPATH%\src\bin\" 1>nul 2>nul
 rd /s /q "%SOURCEPATH%\src\obj\" 1>nul 2>nul
@@ -89,9 +116,13 @@ powershell Compress-Archive "%SOURCEPATH%" -DestinationPath "%SOURCE_ZIP%"
 
 rem -------------------------------------------------------------------
 :BUILD_AND_SIGN
+if (%DOBUILD%)==(0) echo Not Building (-NO was passed in) 
+if (%DOBUILD%)==(0) goto :CREATE_STAGE
+
 echo Building DSI Revit Toolkit
 echo Creating %WHAT% version of the installer (pass in -D to this script to create the DEBUG version)
-call .\build.cmd
+rem Passing in a parameter to build.cmd just limits the build to the year passed into this script
+call .\build.cmd %1
   set found=0
   call :CHECK 2018
   call :CHECK 2019
@@ -105,21 +136,19 @@ call .\build.cmd
 
   echo Signing all relevant DLL files (not necessary for the installer, optional)
   call sign.cmd
-goto :CREATE_STAGE
+  goto :CREATE_STAGE
 
-rem -------------------------------------------------------------------
-rem -- Subroutine to CHECK to make sure we have something to install --
+  rem -------------------------------------------------------------------
+  rem -- Subroutine to CHECK to make sure we have something to install --
 	:CHECK
 	  if not exist "%SOURCEPATH%\src\bin\x64\%WHAT% (Revit %1)\DSIRevitToolkit.dll"   echo %1 %WHAT%  DSI Revit Toolkit is Missing (DSIRevitToolkit.dll)
 	  if exist "%SOURCEPATH%\src\bin\x64\%WHAT% (Revit %1)\DSIRevitToolkit.dll"       set found=1
 	  if exist "%SOURCEPATH%\src\bin\x64\%WHAT% (Revit %1)\DSIRevitToolkit.dll"       echo Including %1 %WHAT%  DSI Revit Toolkit in Installer
 	goto :EOF
-rem -------------------------------------------------------------------
+  rem -------------------------------------------------------------------
 
 
 rem -------------------------------------------------------------------
-
-
 :CREATE_STAGE
 echo Create staging area at c:\%ZipTop%\ where we will build our ZIP and EXE
 echo Erase previous version of the staged files
@@ -148,12 +177,17 @@ if exist "%SOURCEPATH%\install\excludeFiles.txt" echo.
 if exist "%SOURCEPATH%\install\excludeFiles.txt" set EXCLUDE=/EXCLUDE:excludeFiles.txt
 
 echo Current Directory: %cd%
-call :STAGE_BY_YEAR 2018
-call :STAGE_BY_YEAR 2019
-call :STAGE_BY_YEAR 2020
-call :STAGE_BY_YEAR 2021
-call :STAGE_BY_YEAR 2022
-call :STAGE_BY_YEAR 2023
+if not (%1)==() call :STAGE_BY_YEAR %1
+if not (%1)==() echo Files for year %1 *ONLY* are ready to be turned into a Zip
+if not (%1)==() goto :ZIP
+
+	call :STAGE_BY_YEAR 2018
+	call :STAGE_BY_YEAR 2019
+	call :STAGE_BY_YEAR 2020
+	call :STAGE_BY_YEAR 2021
+	call :STAGE_BY_YEAR 2022
+	call :STAGE_BY_YEAR 2023
+
 echo Files ready to be turned into a Zip
 goto :ZIP
 

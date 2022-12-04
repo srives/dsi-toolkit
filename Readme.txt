@@ -16,10 +16,13 @@ Release Notes:
 * Short user manual (this file)	
 
 1 Dec 2022
- * Change target path of install to Program Files (x86)\DSI\
+ * Change target path of install to "C:\Program Files (x86)\DSI\"
  * Correct Sleeve Update logic 
  * Add more messages to Sleeve Update logic
 
+3 Dec 2022
+ * DSI uses PDQ installer, and it does NOT honor the %cd% command line variable, so created our own, %cwd%
+ * Correct Sleeve Update logic (Frank sent another formula via Teams)
 
 GTP Sevices, 2022
 SSR
@@ -103,5 +106,7 @@ SSR
            C:\repos\DSI\revit-toolkit\ExternalLibraries\2024\
 		   
     ExternalLibraries is a directory that contains all the needed Revit DLLs
+	
+
 	
 	

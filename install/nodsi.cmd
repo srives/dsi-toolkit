@@ -11,6 +11,8 @@ rem
 rem -------------------------------------------------------------------
 
   set DSIRoot=%LOCALAPPDATA%\dsi-revit-toolkit
+  set DSIRoot2=C:\Program Files\DSI\dsi-revit-toolkit
+  set DSIRoot3=C:\Program Files (x86)\DSI\dsi-revit-toolkit
   set WHAT=Release
   set ZipTop=DSIRevitToolkit
 
@@ -33,6 +35,13 @@ rem -------------------------------------------------------------------
   rd "..\src\obj\" /s /q 1>nul 2>nul
   echo Delete Staging files (if you want them back, just run CreateInstall.cmd)
   rd "c:\%ZipTop%\%ZipTop%\" /s /q 1>nul 2>nul
+
+  echo Removing WHOLE directory: "%DSIRoot%"
+  rd "%DSIRoot%" /s /q 1>nul 2>nul
+  echo Removing WHOLE directory: "%DSIRoot2%"
+  rd "%DSIRoot2%" /s /q 1>nul 2>nul
+  echo Removing WHOLE directory: "%DSIRoot3%"
+  rd "%DSIRoot3%" /s /q 1>nul 2>nul
   
   echo Autodesk Revit Addin Location: %adpath%
   
@@ -48,13 +57,19 @@ rem -------------------------------------------------------------------
 
 :RevitYear
     echo.
-    set instdir=%DSIRoot%\%1
+    
+	set instdir=%DSIRoot%\%1
+    if exist "%instdir%\" echo Delete installed binaries for %1 (%instdir%\)		
+	rd "%instdir%\" /s /q 1>nul 2>nul
 
+	set instdir=%DSIRoot2%\%1
     if exist "%instdir%\" echo Delete installed binaries for %1 (%instdir%\)	
 	rd "%instdir%\" /s /q 1>nul 2>nul
-	
-	echo Delete installed binaries for %1 DEBUG (%instdir%\)
-	
+
+	set instdir=%DSIRoot3%\%1
+    if exist "%instdir%\" echo Delete installed binaries for %1 (%instdir%\)	
+	rd "%instdir%\" /s /q 1>nul 2>nul
+		
 	set manifest=%adpath%\%1\DSIRevitToolkit%1.addin
 	if not exist "%manifest%" echo DSI Revit %1 Toolkit Addin Manifest NOT FOUND
 	if exist "%manifest%"     echo DSI Revit %1 Toolkit Addin Manifest DELETED
