@@ -7,13 +7,15 @@ rem
 rem  Developer Notes:
 rem
 rem         You can run:
+rem
 rem                          install -dev
+rem
 rem         And it will use the development machine build path as the source of the
 rem         revit manifest files (a developer would do this while building/debugging.
 rem
 rem  To check install results, check this file:
 rem
-rem         %LOCALAPPDATA%\dsi-revit-toolkit\install.txt
+rem         C:\Program Files (x86)\DSI\dsi-revit-toolkit\install.txt
 rem
 rem  8 Nov 2022
 rem  Steve.Rives@gogtp.com
@@ -31,7 +33,8 @@ rem ----------------------------------------------------------------------------
   set DSIRoot=%ProgramFiles%\DSI\dsi-revit-toolkit
   set WHAT=Release
   set DEV=0
-  if /I (%1)==(-dev) set DSIRoot=C:\repos\DSI\revit-toolkit\src\bin\x64
+  if ("%BIT%")==("") set BIT=86
+  if /I (%1)==(-dev) set DSIRoot=C:\repos\DSI\revit-toolkit\src\bin\x%BIT%
   if /I (%1)==(-dev) set DEV=1
   if /I (%1)==(-dev) set WHAT=Debug
   
@@ -72,7 +75,7 @@ rem ----------------------------------------------------------------------------
   set adpath=C:\ProgramData\Autodesk\Revit\Addins\
   echo ERROR: Could not find Autodesk path: %adpath%, we will just use the most common one
   echo ERROR: Could not find Autodesk path: %adpath%, we will just use the most common one >> "%installLog%"
-
+  
 :ready
 
   echo Autodesk Revit Addin Location: %adpath%
@@ -89,13 +92,21 @@ rem ----------------------------------------------------------------------------
   echo DSI Revit Toolkit Install finished >> "%installLog%"
   echo Finished. Check install log: %installLog%  
   echo.  >> "%installLog%"
-  
+
+  rem ----------------------------------------------------------------------------------------------  
+  if (%DEV%)==(1) echo.
+  if (%DEV%)==(1) echo Debug Help. To run Revit against the debugger in Visual Studio
+  if (%DEV%)==(1) echo (using Revit 2020 as an example) go to Properties, then Debug and set
+  if (%DEV%)==(1) echo "Start External Program" to C:\Program Files\Autodesk\Revit 2020\Revit.exe
+  if (%DEV%)==(1) echo.
+
 goto :EOF
 
 rem ----------------------------------------------------------------------------------------------
 :RevitYear
 rem For the passed in year, deposit the DSI related toolkit DLLs, and create a Revit manifest.
-rem Copy DLLs from installer over to the user's appdata\local\dsi-revit-toolkit director
+rem Copy DLLs from installer over to the user's C:\Program Files (x86)\DSI\dsi-revit-toolkit 
+rem directory
 rem ----------------------------------------------------------------------------------------------
 
   echo ------------------- %1 ------------------ >> "%installLog%"
@@ -106,14 +117,15 @@ rem ----------------------------------------------------------------------------
   if (%DEV%)==(1) echo Running Developer Mode >> "%installLog%"
   if (%DEV%)==(1) goto :make_manifest
 
-  rem We copy all the DSI Revit Addin DLLs to the DSIRoot
+  rem We copy all the DSI Revit Addin DLLs to the DSIRoot--e.g., to C:\Program Files (x86)\DSI\dsi-revit-toolkit\2023\
   set instdir=%DSIRoot%\%1
   set DLL=%instdir%\%WHAT%\DSIRevitToolkit.dll
   echo Installing DSI Revit Toolkit for Revit %1
   echo Installing DSI Revit Toolkit for Revit %1 >> "%installLog%"
 
   rem Copy Files  
-  mkdir "%instdir%\" 1>nul 2>nul  
+  mkdir "%instdir%\" 1>nul 2>nul
+  del "%instdir%\*.*" /s /q 1>nul 2>nul
   echo  xcopy "%UnzipPath%%1\*.*" "%instdir%\" /s /q /y 
   echo  xcopy "%UnzipPath%%1\*.*" "%instdir%\" /s /q /y >> "%installLog%"
   xcopy "%UnzipPath%%1\*.*" "%instdir%\" /s /q /y >> "%installLog%"
