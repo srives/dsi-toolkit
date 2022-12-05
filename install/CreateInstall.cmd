@@ -147,6 +147,7 @@ rem -------------------------------------------------------------------
 	echo Creating Source CODE Zip at %SOURCE_ZIP%
 	del "%SOURCE_ZIP%" 1>nul 2>nul
 	if exist "%SOURCE_ZIP%" echo You have %SOURCE_ZIP% open. Close it.
+	echo powershell Compress-Archive "%SOURCEPATH%" -DestinationPath "%SOURCE_ZIP%"
 	powershell Compress-Archive "%SOURCEPATH%" -DestinationPath "%SOURCE_ZIP%"
 
 rem -------------------------------------------------------------------
@@ -329,5 +330,6 @@ rem -------------------------------------------------------------------
 	echo.
 	if (%ZIP_SOURCE%)==(1) echo Your SOURCE CODE is zipped here: %SOURCE_ZIP% (send this to DSI)
 	if (%ZIP_SOURCE%)==(0) echo If you want to create a ZIP file of the source code, re-run as: CreateInstall -S
+	echo To create source zip: powershell Compress-Archive "%SOURCEPATH%" -DestinationPath "%SOURCE_ZIP%"
 	echo Your INSTALLER is: %EXEFile%
 	echo.

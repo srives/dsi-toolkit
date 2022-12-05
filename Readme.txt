@@ -5,24 +5,32 @@ This readme.txt will tell you how to build and release this software.
 
 Release Notes:
 
-22 Nov 21  
-* Create new install scripts/installer (instructions on usage below)
-* Installer installs Revit 2018, 2019, 2020, 2021, 2022, and 2023
-  (2019 and 2023 are new)
-* Allow for straight excel and csv files (user choice) from dropdown
-* When creating CSV, take care of quotes in fields, and commas in fields
-* Add Sleeve Update button 
-* Remove TigerStop button
-* Short user manual (this file)	
+	22 Nov 21  
+		* Create new install scripts/installer (instructions on usage below)
+		* Installer installs Revit 2018, 2019, 2020, 2021, 2022, and 2023
+		  (2019 and 2023 are new)
+		* Allow for straight excel and csv files (user choice) from dropdown
+		* When creating CSV, take care of quotes in fields, and commas in fields
+		* Add Sleeve Update button 
+		* Remove TigerStop button
+		* Short user manual (this file)	
 
-1 Dec 2022
- * Change target path of install to "C:\Program Files (x86)\DSI\"
- * Correct Sleeve Update logic 
- * Add more messages to Sleeve Update logic
+	1 Dec 2022
+		 * Change target path of install to "C:\Program Files (x86)\DSI\"
+		 * Correct Sleeve Update logic 
+		 * Add more messages to Sleeve Update logic
 
-3 Dec 2022
- * DSI uses PDQ installer, and it does NOT honor the %cd% command line variable, so created our own, %cwd%
- * Correct Sleeve Update logic (Frank sent another formula via Teams)
+	3 Dec 2022
+		 * DSI uses PDQ installer, and it does NOT honor the %cd% command line variable, 
+		   therefore, we created our own current directory variable: %cwd%
+		 * Correct Sleeve Update logic (Frank sent another formula via Teams)
+
+	4 Dec 2022
+		 * 32bit and 64bit installs (we only work with 64, but added 32 
+		   trying to find a way around the Excel problems with 32bit Excel).
+		 * Added instructions on what to do when Excel is not working.
+		 * Show version on each drop-down help
+		 
 
 GTP Sevices, 2022
 SSR
@@ -33,7 +41,8 @@ SSR
 
 2. GTP Services helped do development on this tool in 2022 (creating this file)
 
-3. Place the DSI toolkit in some code path.  In the case of GTP, the code 
+3. Assuming you have the ZIP containing all the source code for the DSI Toolkit:
+   Place the DSI toolkit in some code path.  In the case of GTP, the code 
    is located here:
    
          C:\repos\DSI\revit-toolkit\
@@ -80,12 +89,19 @@ SSR
    a. First Install Visual Studio on your machine (the build.cmd script supports vs 2022, Professional 2017, or Community 2019).
       Whatever version you have, you can edit build.cmd with the location of your MSBUILD.exe program.
    b. CreateInstall.cmd will build the software and create the self-extracting EXE.
-   
+      Run CreateInstall.cmd twice. Once to create the 32bit installer, and once for 64bit: 
+		CreateInstall -32
+		CreateInstall -64   		
+   c. The resulting EXEs are two installers:      
+	    DSIRevitToolkit32bit.exe
+	    DSIRevitToolkit64bit.exe	  
+	  These are the installers to run on the target machines.	  
+   d. When these installers run, they install the DSI toolkit to:   
+        C:\Program Files (x86)\DSI\
 
 9. This software uses a licesned version of WinZip self extracting EXE creator.
 
    http://winzip.com/en/product/self-extractor/
-
 
 10. Developer notes:
     a. If you are a programmer, you can build the software by running:
@@ -95,8 +111,7 @@ SSR
 	c. You can clean out your binaries and erase the manifests by running:
 	      nodsip.cmd
 	   This is useful if you are trying to isolate any copy or build problems.
-	   
-	   
+	   	   
 11.	Adding new versions of Revit
     At the time of this writing, Revit 2023 was the latest version of Revit.
 	a. If you want to add Revit 24, update all the .CMD files
@@ -106,7 +121,4 @@ SSR
            C:\repos\DSI\revit-toolkit\ExternalLibraries\2024\
 		   
     ExternalLibraries is a directory that contains all the needed Revit DLLs
-	
-
-	
 	

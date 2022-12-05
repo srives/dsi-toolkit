@@ -13,6 +13,11 @@ rem
 rem         And it will use the development machine build path as the source of the
 rem         revit manifest files (a developer would do this while building/debugging.
 rem
+rem                          install -dev -32
+rem
+rem         And it will use the development machine build path as the source of the
+rem         and your 32bit version.of your build
+rem
 rem  To check install results, check this file:
 rem
 rem         C:\Program Files (x86)\DSI\dsi-revit-toolkit\install.txt
@@ -31,12 +36,33 @@ rem ----------------------------------------------------------------------------
   set UnzipPath=%cwd%
   echo Current Directory = %cwd%
   set DSIRoot=%ProgramFiles%\DSI\dsi-revit-toolkit
+  
   set WHAT=Release
   set DEV=0
-  if ("%BIT%")==("") set BIT=86
-  if /I (%1)==(-dev) set DSIRoot=C:\repos\DSI\revit-toolkit\src\bin\x%BIT%
-  if /I (%1)==(-dev) set DEV=1
-  if /I (%1)==(-dev) set WHAT=Debug
+  set BIT=64
+  set LOOP=0
+  :LOOP_TOP  
+      set /A LOOP=LOOP+1
+	  if /I (%1)==(-dev) set DEV=1
+	  if /I (%1)==(-dev) set WHAT=Debug
+	  if /I (%1)==(-dev) shift
+  	  if /I (%1)==(-64) set BIT=64
+	  if /I (%1)==(-64) shift
+	  if /I (%1)==(-32) set BIT=86
+	  if /I (%1)==(-32) shift
+	  if /I (%1)==(-86) set BIT=86
+	  if /I (%1)==(-86) shift
+	  if /I (%1)==(-x64) set BIT=64
+	  if /I (%1)==(-x64) shift
+	  if /I (%1)==(-x32) set BIT=86
+	  if /I (%1)==(-x32) shift
+	  if /I (%1)==(-x86) set BIT=86
+	  if /I (%1)==(-x86) shift
+  if not (%LOOP%) == (3) goto :LOOP_TOP
+
+  if (%DEV%)==(1) set DSIRoot=C:\repos\DSI\revit-toolkit\src\bin\x%BIT%
+  if (%DEV%)==(1) if (%BIT%)==(86) echo Debugging 32bit DLLs
+  if (%DEV%)==(1) if (%BIT%)==(64) echo Debugging 64bit DLLs
   
   mkdir "%DSIRoot%" 1>nul 2>nul
   set installLog=%DSIRoot%\install.txt
@@ -96,9 +122,11 @@ rem ----------------------------------------------------------------------------
   rem ----------------------------------------------------------------------------------------------  
   if (%DEV%)==(1) echo.
   if (%DEV%)==(1) echo Debug Help. To run Revit against the debugger in Visual Studio
-  if (%DEV%)==(1) echo (using Revit 2020 as an example) go to Properties, then Debug and set
-  if (%DEV%)==(1) echo "Start External Program" to C:\Program Files\Autodesk\Revit 2020\Revit.exe
+  if (%DEV%)==(1) echo             (using Revit 2020 as an example) go to Properties, then Debug and set
+  if (%DEV%)==(1) echo             "Start External Program" to C:\Program Files\Autodesk\Revit 2020\Revit.exe
   if (%DEV%)==(1) echo.
+  if (%DEV%)==(1) if (%BIT%)==(64) echo             To debug 32bit DLLs, use:
+  if (%DEV%)==(1) if (%BIT%)==(64) echo                    install -dev -32
 
 goto :EOF
 

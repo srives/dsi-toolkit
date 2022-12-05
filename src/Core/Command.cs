@@ -31,8 +31,14 @@ namespace DSI.Core
 
         public Result Execute(ExternalCommandData commandData, ref string message, ElementSet elements)
         {
+            var ver = string.Empty;
             try
             {
+                var dt = File.GetCreationTime(GetType().Assembly.Location);
+                if (dt != null && dt != DateTime.MinValue)
+                {
+                    ver += $" v{dt.Year}.{dt.Month}.{dt.Day}";
+                }
                 context = new ApplicationContext(commandData);
                 log = new ApplicationLog(context.InstallDirectory, GetType().FullName);
                 return Main(commandData);
@@ -55,7 +61,19 @@ namespace DSI.Core
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message, "DSI ToolKit Error");
+                if (e.Message.Contains(".Excel."))
+                {
+                    var url = "https://knowledge.autodesk.com/support/revit/troubleshooting/caas/sfdcarticles/sfdcarticles/Microsoft-Office-updates-break-Dynamo-and-excel-links.html";
+                    var res = MessageBox.Show($"Consider repairing your Office 365. Press YES to visit {url}{Environment.NewLine}{e.Message}", "DSI ToolKit Error " + ver, MessageBoxButton.YesNo);
+                    if (res == MessageBoxResult.Yes)
+                    {
+                        System.Diagnostics.Process.Start(url);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show(e.Message, "DSI ToolKit Error " + ver);
+                }
                 log.Logger.Debug(e, "an exception occured");
                 return Result.Failed;
             }

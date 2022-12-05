@@ -13,6 +13,7 @@ using System.Xml.Linq;
 using System.Security.Policy;
 using System.Windows.Controls;
 using System.Collections.ObjectModel;
+using System.IO;
 
 namespace DSI.Commands.Pipework
 {
@@ -55,6 +56,11 @@ namespace DSI.Commands.Pipework
                 msg = "Nothing done.";
             }
             msg += _errorMessage;
+            var dt = File.GetCreationTime(GetType().Assembly.Location);
+            if (dt != null && dt != DateTime.MinValue)
+            {
+                title += $" v{dt.Year}.{dt.Month}.{dt.Day}";
+            }
             MessageBox.Show(msg, title);
             return Result.Succeeded;
         }

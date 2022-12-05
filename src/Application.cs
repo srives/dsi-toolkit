@@ -44,6 +44,12 @@ namespace DSI
         /// <returns>The Result status of the function.</returns>
         public Result OnStartup(UIControlledApplication application)
         {
+            var ver = string.Empty;
+            var dt = File.GetCreationTime(GetType().Assembly.Location);
+            if (dt != null && dt != DateTime.MinValue)
+            {
+                ver = $" v{dt.Year}.{dt.Month}.{dt.Day}";
+            }
 
             var context = new ApplicationContext(application);
             log = new ApplicationLog(context.InstallDirectory, GetType().FullName);
@@ -62,7 +68,7 @@ namespace DSI
                 "Select and Isolate",
                 "Select and Isolate",
                 "Asks the user to select elemens in the model and allows the user to select, isolate, or select and isolate those elements in the view.",
-                "A database transaction will be opened to hide the elements in the view.",
+                "A database transaction will be opened to hide the elements in the view. " + ver,
                 Properties.Resources.filter);
 
             AddPushButtoToPulldownButton(
@@ -72,7 +78,7 @@ namespace DSI
                 Assembly.GetExecutingAssembly().Location,
                 "DSI.Commands.General.ServiceNameIsolator",
                 "Selects and isolates by Service Name.",
-                "A database transaction will be opened to hide the elements in the view.");
+                "A database transaction will be opened to hide the elements in the view." + ver);
 
             AddPushButtoToPulldownButton(
                 selectAndIsolate,
@@ -81,7 +87,7 @@ namespace DSI
                 Assembly.GetExecutingAssembly().Location,
                 "DSI.Commands.General.ReferenceLevelIsolator",
                 "Selects and isolates by Reference Level.",
-                "A database transaction will be opened to hide the elements in the view.");
+                "A database transaction will be opened to hide the elements in the view." + ver );
 
             AddPushButtonToPanel(
                 generalPanel,
@@ -90,7 +96,7 @@ namespace DSI
                 Assembly.GetExecutingAssembly().Location,
                 "DSI.Commands.General.SetCIDAndServiceType",
                 "Asks the user to select pipework in the model and updates those elements' DSI_CID and DSI_ServiceType.",
-                "A database transaction will be opened and the DSI_CID and DSI_Service Type will be updated in the model.",
+                "A database transaction will be opened and the DSI_CID and DSI_Service Type will be updated in the model." + ver,
                 Properties.Resources.refresh);
 
             AddPushButtonToPanel(
@@ -136,7 +142,7 @@ namespace DSI
                 Assembly.GetExecutingAssembly().Location,
                 "DSI.Commands.Pipework.SleeveFixup",
                 "Update Sleeve Parameters for Exporting Points on Selected Parts", // Tool Tip
-                "Fixup Round Floors, Rectangular Floors, Round Walls and Rectangular Walls", // Long Desc
+                "Fixup Round Floors, Rectangular Floors, Round Walls and Rectangular Walls" + ver, // Long Desc
                 Properties.Resources.refresh);
 
             var exportBom = AddPulldownButtonToPanel(
@@ -144,7 +150,7 @@ namespace DSI
                 "Export BOM",
                 "Export BOM",
                 "Various BOM export tools for pipework.",
-                "Hover over the options in the list for more information on the specific exporter.",
+                "Hover over the options in the list for more information on the specific exporter." + ver,
                 Properties.Resources.excelbw);
 
             AddPushButtoToPulldownButton(
@@ -154,7 +160,7 @@ namespace DSI
                 Assembly.GetExecutingAssembly().Location,
                 "DSI.Commands.Pipework.PipeAndFittingBOM",
                 "Asks the users to select pipework and fittings in the model and exports the required information to a BOM.",
-                "During selection, parts without the Category property set to MEP Fabrication Pipework AND parts with a Service Type of Weld (57), Joint (58), or Gasket (62) will be automatically filtered out.");
+                "During selection, parts without the Category property set to MEP Fabrication Pipework AND parts with a Service Type of Weld (57), Joint (58), or Gasket (62) will be automatically filtered out." + ver);
 
            AddPushButtoToPulldownButton(
                 exportBom,
@@ -163,7 +169,7 @@ namespace DSI
                 Assembly.GetExecutingAssembly().Location,
                 "DSI.Commands.Pipework.PipeAndFittingBOMCSV",
                 "Asks the users to select pipework and fittings in the model and exports the required information to a BOM.",
-                "During selection, parts without the Category property set to MEP Fabrication Pipework AND parts with a Service Type of Weld (57), Joint (58), or Gasket (62) will be automatically filtered out.");
+                "During selection, parts without the Category property set to MEP Fabrication Pipework AND parts with a Service Type of Weld (57), Joint (58), or Gasket (62) will be automatically filtered out." + ver);
 
 
             AddPushButtoToPulldownButton(
@@ -173,7 +179,7 @@ namespace DSI
                 Assembly.GetExecutingAssembly().Location,
                 "DSI.Commands.Pipework.SleeveBOM",
                 "Asks the user to select pipe sleeves in the model and exports the required intormation to a BOM.",
-                "During selection, parts without a Family Name name of either 'DSI Round Floor Sleeve' or 'Rectangular Floor Sleeve' will be automatically filtered out.");
+                "During selection, parts without a Family Name name of either 'DSI Round Floor Sleeve' or 'Rectangular Floor Sleeve' will be automatically filtered out." + ver);
 
             AddPushButtoToPulldownButton(
                 exportBom,
@@ -182,7 +188,7 @@ namespace DSI
                 Assembly.GetExecutingAssembly().Location,
                 "DSI.Commands.Pipework.SleeveBOMCSV",
                 "Asks the user to select pipe sleeves in the model and exports the required intormation to a BOM.",
-                "During selection, parts without a Family Name name of either 'DSI Round Floor Sleeve' or 'Rectangular Floor Sleeve' will be automatically filtered out.");
+                "During selection, parts without a Family Name name of either 'DSI Round Floor Sleeve' or 'Rectangular Floor Sleeve' will be automatically filtered out." + ver);
 
             #endregion
 
@@ -204,7 +210,7 @@ namespace DSI
                 "Export Hanger BOM to Excel",
                 "Hanger BOM",
                 "Asks the users to select hangers in the model and exports the required information to a BOM. This will only export the data from Trapeze and Clevis hangers.",
-                "During selection, parts without the Category property set to MEP Fabrication Hangers will be automatically filtered out. A database transaction will be opened and the selected element's Product Entry will be updated.",
+                "During selection, parts without the Category property set to MEP Fabrication Hangers will be automatically filtered out. A database transaction will be opened and the selected element's Product Entry will be updated." + ver,
                 Properties.Resources.excelbw);
 
             AddPushButtoToPulldownButton(
@@ -214,7 +220,7 @@ namespace DSI
                 Assembly.GetExecutingAssembly().Location,
                 "DSI.Commands.Hanger.HangerBOM",
                 "Asks the users to select hangers in the model and exports the required information to a BOM. This will only export the data from Trapeze and Clevis hangers.",
-                "During selection, parts without the Category property set to MEP Fabrication Hangers will be automatically filtered out. A database transaction will be opened and the selected element's Product Entry will be updated.");
+                "During selection, parts without the Category property set to MEP Fabrication Hangers will be automatically filtered out. A database transaction will be opened and the selected element's Product Entry will be updated." + ver);
 
             AddPushButtoToPulldownButton(
                 hangerPullDown,
@@ -223,7 +229,7 @@ namespace DSI
                 Assembly.GetExecutingAssembly().Location,
                 "DSI.Commands.Hanger.HangerBOMCSV",
                 "Asks the users to select hangers in the model and exports the required information to a BOM. This will only export the data from Trapeze and Clevis hangers.",
-                "During selection, parts without the Category property set to MEP Fabrication Hangers will be automatically filtered out. A database transaction will be opened and the selected element's Product Entry will be updated.");
+                "During selection, parts without the Category property set to MEP Fabrication Hangers will be automatically filtered out. A database transaction will be opened and the selected element's Product Entry will be updated." + ver);
 
             #endregion
 
