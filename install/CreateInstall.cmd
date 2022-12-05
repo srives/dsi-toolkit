@@ -329,7 +329,21 @@ rem -------------------------------------------------------------------
 :FINAL_NOTE
 	echo.
 	if (%ZIP_SOURCE%)==(1) echo Your SOURCE CODE is zipped here: %SOURCE_ZIP% (send this to DSI)
-	if (%ZIP_SOURCE%)==(0) echo If you want to create a ZIP file of the source code, re-run as: CreateInstall -S
-	echo To create source zip: powershell Compress-Archive "%SOURCEPATH%" -DestinationPath "%SOURCE_ZIP%"
-	echo Your INSTALLER is: %EXEFile%
+	if (%ZIP_SOURCE%)==(1) goto :FINI
+	
+	:HOW_TO_ZIP_SOURCE_MANUALLY
+	echo If you want to create a ZIP file of the source code, re-run as:
 	echo.
+	echo     CreateInstall -S
+	echo.
+	echo OR, to create the zip of the source code now, run the following two steps:
+	echo.
+	echo       nodsi.cmd (to cleanup all the binaries)
+	echo       powershell Compress-Archive "%SOURCEPATH%" -DestinationPath "%SOURCE_ZIP%"
+	echo.	
+	
+:FINI
+echo Your INSTALLER is: %EXEFile%
+echo Upload to DSI Sharepoint here:
+echo     https://gogtp.sharepoint.com/:f:/r/sites/CustomerSharedFiles/Shared%%20Documents/GTP%%20STRATUS/File%%20Share%%20to%%20Customers/DSI?csf=1^&web=1^&e=ygayfZ
+echo.
