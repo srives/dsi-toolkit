@@ -139,9 +139,9 @@ rem -------------------------------------------------------------------
 
 rem -------------------------------------------------------------------
 :ZIPSOURCE
+	set SOURCE_ZIP=%SOURCEPATH%-source-%TODAY%.zip
 	if (%ZIP_SOURCE%)==(0) goto :BUILD
 
-	set SOURCE_ZIP=%SOURCEPATH%-source-%TODAY%.zip
 	rem E.g., SOURCE_ZIP=C:\repos\DSI\revit-toolkit-source-2022-11-14
 
 	echo Creating Source CODE Zip at %SOURCE_ZIP%

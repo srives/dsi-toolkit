@@ -31,6 +31,11 @@ Release Notes:
 		 * Added instructions on what to do when Excel is not working.
 		 * Show version on each drop-down help
 		 
+    5 Dec 2022
+		 * Add Service Prefix to sleeve parts
+		 * If can’t find H, W, L don’t calculate HxWxL
+		 * If can’t find Diam or Len, don’t calculate DxL
+
 
 GTP Sevices, 2022
 SSR

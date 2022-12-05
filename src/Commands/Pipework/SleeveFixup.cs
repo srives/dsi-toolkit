@@ -110,28 +110,6 @@ namespace DSI.Commands.Pipework
             return ret;
         }
 
-        public string GetPrefix(FamilyInstance e, Document doc)
-        {
-            string pfx = string.Empty;
-            try
-            {
-                var subIds = e.GetSubComponentIds();
-                if (subIds != null && subIds.Count > 0)
-                {
-                    var pntId = subIds.FirstOrDefault(id => doc.GetElement(id).Name.Contains("Point"));
-                    var pnt = doc.GetElement(pntId);
-                    Parameter oHosParameter = e.LookupParameter("eM_Service Name");
-                    Parameter oNestedParameter = pnt.LookupParameter("eM_Service Name"); // WOULD LIKE TO USE IN FRONT OF PREFIX
-                    //    if (string.IsNullOrEmpty(oNestedParameter))
-                    //         oNestedParameter.Set(oHosParameter);
-                }
-            }
-            catch
-            {
-            }
-            return pfx;
-        }
-
         private string _errorMessage = string.Empty;
         private void StoreErrorMessage(string context, Exception e, FamilyInstance fam)
         {
@@ -225,10 +203,6 @@ namespace DSI.Commands.Pipework
                 if (!hasl)
                     warning += " No Length";
                 StoreWarningMessage(warning, e);
-
-                // ask Frank what we should do if we get here (should we save the value?)
-                val = diam * 12 + "\" x " + len * 12 + "\"";
-                p.Set(val);
             }
             return (hasd && hasl);
         }
@@ -247,7 +221,7 @@ namespace DSI.Commands.Pipework
             }
             else
             {
-                var warning = "Missing mults DxWxL. Element has ";
+                var warning = "Can't calculate DxWxL. Element has ";
                 if (!hasd)
                     warning += " No Depth, ";
                 if (!hasw)
@@ -255,10 +229,6 @@ namespace DSI.Commands.Pipework
                 if (!hasl)
                     warning += " No Length";
                 StoreWarningMessage(warning, e);
-
-                // ask Frank what we should do if we get here (should we save the value?)
-                val = depth * 12 + "\"x" + width * 12 + "\"x" + len * 12 + "\"";
-                p.Set(val);
             }
             return (hasd && hasw && hasl);
         }
@@ -266,13 +236,16 @@ namespace DSI.Commands.Pipework
         private bool SetPrefix_XDash_MainNum(FamilyInstance e, string paramName, string dash)
         {
             Parameter p = e.LookupParameter(paramName);
+            var (esp, hasesp) = GetString(e, "eM_Service Abbreviation", "");
             var (pp, haspp) = GetString(e, "Point Prefix", "");
             var (pm, haspm) = GetString(e, "Point Main Number", "");
             string val;
 
             if (haspp && haspm)
             {
-                val = pp + $"{dash}{_dash}" + pm;
+                val = pp + $"{ dash}{_dash}" + pm;
+                if (hasesp && !string.IsNullOrEmpty(esp))
+                    val = esp + $"{_dash}" + val;
                 p.Set(val);
             }
             else
@@ -383,7 +356,6 @@ namespace DSI.Commands.Pipework
                 {
                     try
                     {
-                        var pfx = GetPrefix(e, doc);
                         SetDxWxL("Point Description", e);
                         SetPrefix_XDash_MainNum(e, "Point Number 1", "1");
                         SetPrefix_XDash_MainNum(e, "Point Number 2", "2");
@@ -427,7 +399,6 @@ namespace DSI.Commands.Pipework
                 {
                     try
                     {
-                        var pfx = GetPrefix(e, doc);
                         SetDxWxL("Point Description", e);
                         SetPrefix_XDash_MainNum(e, "Point Number 1", "1");
                         SetPrefix_XDash_MainNum(e, "Point Number 2", "2");
