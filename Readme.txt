@@ -3,40 +3,6 @@ DSI Revit Toolkit
 
 This readme.txt will tell you how to build and release this software.
 
-Release Notes:
-
-	22 Nov 21  
-		* Create new install scripts/installer (instructions on usage below)
-		* Installer installs Revit 2018, 2019, 2020, 2021, 2022, and 2023
-		  (2019 and 2023 are new)
-		* Allow for straight excel and csv files (user choice) from dropdown
-		* When creating CSV, take care of quotes in fields, and commas in fields
-		* Add Sleeve Update button 
-		* Remove TigerStop button
-		* Short user manual (this file)	
-
-	1 Dec 2022
-		 * Change target path of install to "C:\Program Files (x86)\DSI\"
-		 * Correct Sleeve Update logic 
-		 * Add more messages to Sleeve Update logic
-
-	3 Dec 2022
-		 * DSI uses PDQ installer, and it does NOT honor the %cd% command line variable, 
-		   therefore, we created our own current directory variable: %cwd%
-		 * Correct Sleeve Update logic (Frank sent another formula via Teams)
-
-	4 Dec 2022
-		 * 32bit and 64bit installs (we only work with 64, but added 32 
-		   trying to find a way around the Excel problems with 32bit Excel).
-		 * Added instructions on what to do when Excel is not working.
-		 * Show version on each drop-down help
-		 
-    5 Dec 2022
-		 * Add Service Prefix to sleeve parts
-		 * If can’t find H, W, L don’t calculate HxWxL
-		 * If can’t find Diam or Len, don’t calculate DxL
-
-
 GTP Sevices, 2022
 SSR
 -----------------------------------------------------------------------------------

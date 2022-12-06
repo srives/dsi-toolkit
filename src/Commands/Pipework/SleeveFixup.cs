@@ -192,7 +192,8 @@ namespace DSI.Commands.Pipework
             string val;
             if (hasd && hasl)
             {
-                val = diam * 12 + "\" x " + len * 12 + "\"";
+                //          3.03" x 4"
+                val = $"{diam * 12:0.###}\" x {len * 12:0.###}\"";
                 p.Set(val);
             }
             else
@@ -216,7 +217,8 @@ namespace DSI.Commands.Pipework
             string val;
             if (hasd && hasw && hasl)
             {
-                val = depth * 12 + "\"x" + width * 12 + "\"x" + len * 12 + "\"";
+                // 12" x 24.2" x 
+                val = $"{depth * 12:0.###}\" x {width * 12:0.###}\" x {len * 12:0.###}\"";
                 p.Set(val);
             }
             else

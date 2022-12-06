@@ -262,6 +262,9 @@ rem ------------------------ Subroutine -----------------------------------
 	  if not exist "%StageRoot%\%1\%WHAT%\%MainDLL%" goto :EOF
 	  echo Directory of src\bin\x%BIT%\%WHAT% (Revit %1)\*.* >> %locallog%
 	  dir /s "%SOURCEPATH%\src\bin\x%BIT%\%WHAT% (Revit %1)\*.*" >>  %locallog%
+	  
+  :RELEASE_NOTES
+     copy "%SOURCEPATH%\ReleaseNotes.txt" "%StageRoot%\%1\%WHAT%\ReleaseNotes.txt" 1>nul 2>nul
 goto :EOF
 
 rem -------------------------------------------------------------------
